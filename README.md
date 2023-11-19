@@ -2,7 +2,7 @@
 - [Description du projet](#projet-fil-rouge-persistence_g1_6)
 - [Installation](#installation)
 - [Utilisation](#utilisation)
-- [Conception et réalisation](#conception-et-realisation)
+- [Conception et réalisation](#Conception-et-realisation)
 - [Documentation](#documentation)
 - [Test](#test)
 - [Itération 1](#iteration-1)
@@ -35,7 +35,7 @@ Pour visualiser la couverture de test, il faut au préalable être connecté au 
 A la suite de cela, il sera possible d'accéder à la page d'accueil de notre projet [ici](http://im2ag-sonar.u-ga.fr:9000/dashboard?id=fr.uga.miage.m1%3APersistence_g1_6) pour pouvoir visualiser le pourcentage de couverture.
 
 
-## Documentation {#documentation}
+## Documentation
 Durant tout le projet, nous essayons d'utiliser le moins possible de commentaires. La raison en est que le code parle de lui-même, cela passe par une nomenclature explicite, un suivi des conventions ainsi que par une organisation logique du code. Les noms de variables, de fonctions et de classes sont choisis de manière à refléter clairement leur fonctions et leur rôles au sein du projet. Cependant, en cas de nécessité, des commentaires sont et seront ajoutés de manière à fournir des informations importantes ne pouvant pas être déduites directement du code.
 
 
