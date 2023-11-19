@@ -15,10 +15,10 @@ Par ailleurs afin d'éviter une redondance d'information, un dossier spécifique
   - [Conception et réalisation](#Conception-et-réalisation)
   - [Documentation](#documentation)
   - [Test](#test)
-  - [Itération 1](#iteration-1)
-  - [Itération 2](#iteration-2)
-  - [Itération 3](#iteration-3)
-  - [Itération 4](#iteration-4)
+  - [Iteration 1](#iteration-1)
+  - [Iteation 2](#iteration-2)
+  - [Iteration 3](#iteration-3)
+  - [Iteration 4](#iteration-4)
 
 ## Installation
 - Assurez vous d'avoir Maven d'installé sur votre systeme
