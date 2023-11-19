@@ -39,14 +39,14 @@ A la suite de cela, il sera possible d'accéder à la page d'accueil de notre pr
 Durant tout le projet, nous essayons d'utiliser le moins possible de commentaires. La raison en est que le code parle de lui-même, cela passe par une nomenclature explicite, un suivi des conventions ainsi que par une organisation logique du code. Les noms de variables, de fonctions et de classes sont choisis de manière à refléter clairement leur fonctions et leur rôles au sein du projet. Cependant, en cas de nécessité, des commentaires sont et seront ajoutés de manière à fournir des informations importantes ne pouvant pas être déduites directement du code.
 
 
-## Conception et réalisation
+## Conception et realisation
 - Base du projet fournie par l'IM2AG de Grenoble (création de la frame, ajout des figures et de l'interface graphique).
 - CHAZEAU Vincent : conception/réalisation et implémentation des incrémentations imposées en cours.
 - CHARRE Kyllian : conception/réalisation et implémentation des incrémentations imposées en cours.
 
 
 
-## Itération 1
+## Iteration 1
 
 ### Objectifs
 
@@ -67,7 +67,7 @@ Tous les objectifs ont été remplis et la dette a été réduite, passant de 4h
 
 
 
-## Itération 2
+## Iteration 2
 
 ### Objectifs
 
@@ -90,7 +90,7 @@ Tous les objectifs ont été réalisés, tout en maintenant une dette technique 
 
 
 
-## Itération 3
+## Iteration 3
 
 ### Objectifs
 
@@ -112,7 +112,7 @@ Malheureusement, tous les objectifs n'ont pas pu être respectés dans les déla
 
 
 
-## Itération 4
+## Iteration 4
 
 ### Objectifs
 
