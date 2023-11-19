@@ -48,7 +48,7 @@ Durant tout le projet, nous essayons d'utiliser le moins possible de commentaire
 
 ## Itération 1
 
-### Objectif
+### Objectifs
 
 - Découverte du projet / Prise en main des fonctionnalités de base.
 - Implémenter la notion de "patron Visiteur" vue en cours.
@@ -69,7 +69,7 @@ Tous les objectifs ont été remplis et la dette a été réduite, passant de 4h
 
 ## Itération 2
 
-### Objectif
+### Objectifs
 
 - Mettre en place le fonctionnement du Ctrl-Z.
 - Adapter le code pour qu'il suive la logique du patron Composant.
@@ -77,10 +77,11 @@ Tous les objectifs ont été remplis et la dette a été réduite, passant de 4h
 - Diagramme de séquence.
 - Ajout de tests de couverture du code.
 - Non-régression des précédentes fonctionnalités.
+- Réduire la dette.
 
 ### Problèmes rencontrés
 
-//TODO Vincent, help, je ne sais pas quoi dire.
+Les problèmes majeurs ont été rencontré lors de la réalisation des différents diagrammes demandés. Notamment pour comprendre qu'est-ce qui est important de représenter à travers ces diagrammes.
 
 ### Résultat
 
@@ -91,27 +92,29 @@ Tous les objectifs ont été réalisés, tout en maintenant une dette technique 
 
 ## Itération 3
 
-### Objectif
+### Objectifs
 
 - Rendre les formes déplaçables sur la frame (clic + maintien sur une forme, déplacement, relâcher).
 - Non-régression des précédentes fonctionnalités.
+- Réaliser un système de groupement de formes (un groupe agira exactement de la même manière qu'une forme seule).
+- Réduire la dette technique et les codes smell.
 
 ### Problèmes rencontrés
 
-- Mauvaise mise en place du patron Composant à l'itération précédente, soit remodellement pour être à jour.
-- La composition des groupes est très complexe et implique une longue phase de conception afin d'en faire ressortir toutes les facettes (Ctrl-Z sur un groupe annule le groupe, déplacement sur une forme du groupe = déplacement de toutes les formes).
-- L'objectif de non-régression des précédentes fonctionnalités devient de plus en plus complexe (exponentielle par rapport au nombre d'incrémentation du projet). À VOIR SI ÇA A UN SENS CETTE PHRASE, JE N'EN SUIS PAS CONVAINCU.
+- Mauvaise mise en place du patron Composant à l'itération précédente, soit remodèlement pour être à jour.
+- La composition des groupes est très complexe et implique une longue phase de conception afin d'en faire ressortir toutes les facettes (Ctrl-Z sur un groupe annule le groupe, déplacement sur une forme du groupe revient à déplacer toutes les formes de ce groupe, grouper un groupe devient un nouveau groupe).
+- L'objectif de non-régression des précédentes fonctionnalités devient de plus en plus complexe (exponentielle par rapport à l'ajout de nouvelles fonctionnalités).
+
 
 ### Résultat
 
-TODO MA BABY
-
+Malheureusement, tous les objectifs n'ont pas pu être respectés dans les délais impartis, en particulier la réalisation des groupes. Le problème lié à la gestion des groupes n'a pas été suffisamment réfléchi, ce qui a entraîné une mauvaise gestion du temps. Cette itération montre l'importance d'une bonne planification avant de mettre en œuvre une fonctionnalité complexe. Une gestion plus efficace du temps aurait pu être réalisée en identifiant et en traitant rapidement les problèmes potentiels liés à la composition des groupes.
 
 
 
 ## Itération 4
 
-### Objectif
+### Objectifs
 
 - Ajout d'une librairie externe ajoutant une nouvelle forme dessinable (un cube).
 - Le plus rapidement possible.
@@ -120,7 +123,7 @@ TODO MA BABY
 ### Problèmes rencontrés
 
 - Appliquer le même comportement au cube qu'aux autres formes.
-- Non-régression.
+- Non-régression de plus en plus complexe.
 
 ### Résultat
 
