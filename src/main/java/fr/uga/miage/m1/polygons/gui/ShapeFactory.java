@@ -1,11 +1,6 @@
 package fr.uga.miage.m1.polygons.gui;
 
-import fr.uga.miage.m1.polygons.gui.shapes.Circle;
-import fr.uga.miage.m1.polygons.gui.shapes.SimpleShape;
-import fr.uga.miage.m1.polygons.gui.shapes.Square;
-import fr.uga.miage.m1.polygons.gui.shapes.Triangle;
-
-import java.awt.*;
+import fr.uga.miage.m1.polygons.gui.shapes.*;
 
 public class ShapeFactory {
 
@@ -37,6 +32,9 @@ public class ShapeFactory {
             case "triangle":
                 shape = new Triangle(x, y);
                 break;
+            case "cube":
+                shape = new Cube(50, x, y);
+                break;
             default:
                 break;
         }
@@ -54,6 +52,9 @@ public class ShapeFactory {
                 break;
             case TRIANGLE:
                 shape = new Triangle(x, y);
+                break;
+            case CUBE:
+                shape = new Cube(50, x, y);
                 break;
             default:
                 break;

@@ -1,6 +1,7 @@
 package fr.uga.miage.m1.polygons.gui.persistence;
 
 import fr.uga.miage.m1.polygons.gui.shapes.Circle;
+import fr.uga.miage.m1.polygons.gui.shapes.Cube;
 import fr.uga.miage.m1.polygons.gui.shapes.Square;
 import fr.uga.miage.m1.polygons.gui.shapes.Triangle;
 
@@ -13,9 +14,6 @@ public class XMLVisitor implements Visitor {
 
     static final String XY = "</x><y>";
     static final String YSHAPE = "</y></shape>";
-
-    public XMLVisitor() {
-    }
 
     @Override
     public void visit(Circle circle) {
@@ -33,6 +31,12 @@ public class XMLVisitor implements Visitor {
     public void visit(Triangle triangle) {
 
         this.representation = "<shape><type>triangle</type><x>" + triangle.getX() + XY + triangle.getY() + YSHAPE;
+    }
+
+    @Override
+    public void visit(Cube cube) {
+
+        this.representation = "<shape><type>cube</type><x>" + cube.getX() + XY + cube.getY() + YSHAPE;
     }
 
     /**

@@ -18,7 +18,7 @@ public class SquareTest {
 
     @Test
     @DisplayName("Test XMLvisitor sur Square")
-    public void testVisitorXML() {
+    void testVisitorXML() {
 
         //given
         Square square = new Square(0, 0);
@@ -31,7 +31,7 @@ public class SquareTest {
 
     @Test
     @DisplayName("Test JSONvisitor sur Square")
-    public void testVisitorJSON() {
+    void testVisitorJSON() {
 
         final String XY = ",\n\t\t\"y\": ";
         final String NT = "\n\t}";
@@ -49,7 +49,7 @@ public class SquareTest {
     Graphics2D g;
     @Test
     @DisplayName("Test draw sur Square")
-    public void testDraw() {
+    void testDraw() {
 
         //given
         Square square = new Square(0, 0);

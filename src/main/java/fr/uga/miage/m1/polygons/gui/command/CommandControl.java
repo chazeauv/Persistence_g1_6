@@ -2,6 +2,7 @@ package fr.uga.miage.m1.polygons.gui.command;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 public class CommandControl {
 
@@ -45,7 +46,7 @@ public class CommandControl {
         commandsHistory.remove(commandsHistory.size()-1);
     }
 
-    public ArrayList<Command> getCommands() {
+    public List<Command> getCommands() {
         return commands;
     }
 

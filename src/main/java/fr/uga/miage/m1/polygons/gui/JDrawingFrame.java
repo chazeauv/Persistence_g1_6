@@ -21,22 +21,11 @@ import java.util.logging.Logger;
  */
 public class JDrawingFrame extends JFrame {
 
-    private enum Shapes {
-
-        SQUARE, TRIANGLE, CIRCLE, CUBE
-    }
-
-    private static final String CIRCLE = "circle";
-    private static final String TRIANGLE = "triangle";
-    private static final String SQUARE = "square";
-
-    private static final String CUBE = "cube";
-
     private transient SimpleShape shape;
 
     private transient SimpleShape draggedShape;
 
-    private transient List<SimpleShape> mShapes = new ArrayList<SimpleShape>();
+    private transient List<SimpleShape> mShapes = new ArrayList<>();
 
     private static final long serialVersionUID = 1L;
 
@@ -52,7 +41,7 @@ public class JDrawingFrame extends JFrame {
 
     private static final Logger LOGGER = Logger.getLogger(JDrawingFrame.class.getName());
 
-    private Command  command;
+    private transient Command command;
 
     private final transient ActionListener mReusableActionListener = new ShapeActionListener();
 
@@ -152,7 +141,7 @@ public class JDrawingFrame extends JFrame {
             export.append("{\n\"shapes\": [\n");
 
             for (int i = 0; i < mShapes.size(); i++) {
-                SimpleShape shape = mShapes.get(i);
+                shape = mShapes.get(i);
                 String shapeName = shape.getClass().getSimpleName().toLowerCase();
                 export.append("\t{\n\t\t\"type\": \"" + shapeName + "\",\n\t\t\"x\": " + shape.getX() + ",\n\t\t\"y\": " + shape.getY() + "\n\t}");
                 if (i < mShapes.size() - 1) {
@@ -166,7 +155,7 @@ public class JDrawingFrame extends JFrame {
             export.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<root>\n<shapes>\n");
 
             for (int i = 0; i < mShapes.size(); i++) {
-                SimpleShape shape = mShapes.get(i);
+                shape = mShapes.get(i);
                 String shapeName = shape.getClass().getSimpleName();
                 export.append("\t<shape>\n\t\t<type>" + shapeName + "</type>\n\t\t<x>" + shape.getX() + "</x>\n\t\t<y>" + shape.getY() + "</y>\n\t</shape>");
                 if (i < mShapes.size() - 1) {
@@ -296,8 +285,8 @@ public class JDrawingFrame extends JFrame {
 
     //Debug
     private void showShapes(List<SimpleShape> shapes) {
-        for (SimpleShape shape : shapes) {
-            LogRecord infoShapes = new LogRecord(Level.INFO, shape.getClass().getSimpleName() + " : " + shape.getX() + ", " + shape.getY());
+        for (SimpleShape shp : shapes) {
+            LogRecord infoShapes = new LogRecord(Level.INFO, shp.getClass().getSimpleName() + " : " + shp.getX() + ", " + shp.getY());
             LOGGER.log(infoShapes);
         }
     }

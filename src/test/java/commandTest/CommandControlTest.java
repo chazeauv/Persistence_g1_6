@@ -15,7 +15,7 @@ public class CommandControlTest {
 
     @Test
     @DisplayName("Test addCommand")
-    public void testAddCommand() {
+    void testAddCommand() {
 
         //given
         CommandControl commandControl = new CommandControl();
@@ -29,7 +29,7 @@ public class CommandControlTest {
 
     @Test
     @DisplayName("Test removeCommand")
-    public void testRemoveCommand() {
+    void testRemoveCommand() {
 
         //given
         CommandControl commandControl = new CommandControl();

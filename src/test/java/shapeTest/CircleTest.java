@@ -18,7 +18,7 @@ import static org.mockito.Mockito.verify;
 public class CircleTest {
     @Test
     @DisplayName("Test XMLvisitor sur Circle")
-    public void testVisitorXML() {
+    void testVisitorXML() {
 
         //given
         Circle circle = new Circle(0, 0);
@@ -31,7 +31,7 @@ public class CircleTest {
 
     @Test
     @DisplayName("Test JSONvisitor sur Circle")
-    public void testVisitorJSON() {
+    void testVisitorJSON() {
 
         final String XY = ",\n\t\t\"y\": ";
         final String NT = "\n\t}";
@@ -49,7 +49,7 @@ public class CircleTest {
     Graphics2D g;
     @Test
     @DisplayName("Test draw sur Circle")
-    public void testDraw() {
+    void testDraw() {
 
         //given
         Circle circle = new Circle(0, 0);

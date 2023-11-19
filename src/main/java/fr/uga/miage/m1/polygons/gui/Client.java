@@ -8,10 +8,6 @@ import fr.uga.miage.m1.polygons.gui.shapes.SimpleShape;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.LogRecord;
-import java.util.logging.Logger;
 
 public class Client implements MouseListener, MouseMotionListener {
 
@@ -110,7 +106,7 @@ public class Client implements MouseListener, MouseMotionListener {
      */
     public void mouseDragged(MouseEvent evt) {
 
-        if(frame.getPanel().contains(evt.getX(), evt.getY())){
+        if(frame.getPanel().contains(evt.getX(), evt.getY()) && frame.getDraggedShape() != null){
             Point currentPoint = evt.getPoint();
             int x = currentPoint.x - frame.getLastPressed().x;
             int y = currentPoint.y - frame.getLastPressed().y;

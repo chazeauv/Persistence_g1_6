@@ -1,19 +1,3 @@
 
-u
-Esrc/main/java/fr/uga/miage/m1/polygons/gui/persistence/Visitable.java,8\7\870399614d9de2971c2cfc89cca0ed8bff2780fb
-w
-Gsrc/main/java/fr/uga/miage/m1/polygons/gui/persistence/JSonVisitor.java,a\8\a8172d57575b91682dafa72e5701503722a5e36b
-s
-Csrc/main/java/fr/uga/miage/m1/polygons/gui/persistence/Visitor.java,e\7\e7192367a57baa0e332fb0400304482b632f02eb
-v
-Fsrc/main/java/fr/uga/miage/m1/polygons/gui/persistence/XMLVisitor.java,a\e\ae044c02551585c9afdbb9c3fed19204471a85ce
-U
-%src/test/java/JDrawingFrameTests.java,c\d\cd7eede4a688fc852756c5515c37bac27ef0fc10
-Y
-)src/test/java/shapeTest/TriangleTest.java,9\2\92e365025c370a9f4fbab4407a4b013217084ea4
-W
-'src/test/java/shapeTest/SquareTest.java,9\b\9b0d5dfc4321cf25356c51f5fdabbd4b41424906
 r
 Bsrc/main/java/fr/uga/miage/m1/polygons/gui/command/UndoAction.java,a\c\ac2e931ee774ee34c8baf8897990608823fbf88c
-7
-pom.xml,4\4\442292b8a7efeabbe4cc176709b833b1792140ec

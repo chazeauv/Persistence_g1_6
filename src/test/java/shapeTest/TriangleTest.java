@@ -17,7 +17,7 @@ public class TriangleTest {
 
     @Test
     @DisplayName("Test XMLvisitor sur triangle")
-    public void testVisitorXML() {
+    void testVisitorXML() {
 
         //given
         Triangle triangle = new Triangle(0, 0);
@@ -30,7 +30,7 @@ public class TriangleTest {
 
     @Test
     @DisplayName("Test JSONvisitor sur Triangle")
-    public void testVisitorJSON() {
+    void testVisitorJSON() {
 
         final String XY = ",\n\t\t\"y\": ";
         final String NT = "\n\t}";
@@ -48,7 +48,7 @@ public class TriangleTest {
     Graphics2D g;
     @Test
     @DisplayName("Test draw sur Triangle")
-    public void testDraw() {
+    void testDraw() {
 
         //given
         Triangle triangle = new Triangle(0, 0);
