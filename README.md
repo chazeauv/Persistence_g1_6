@@ -1,4 +1,4 @@
-## **Projet fil rouge PERSISTENCE_G1_6**{#projet-fil-rouge-persistence-g1-6}
+## Projet fil rouge PERSISTENCE_G1_6
 
 L'objectif de ce projet est d'implémenter et d'appliquer les différentes notions vues en cours de Patron et Composant. Celui-ci a pour base une frame où l'on peut y disposer des cercles, des carrés et des rectangles. Au fil de chaque itération, il est demandé d'ajouter de nouvelles fonctionnalités, mettre en place de différents patrons (patron Composite, Visiteur, ...), d'utiliser Java/Maven/Sonar mais aussi d'avoir une couverture de test d'au moins 30%. Par ailleurs, afin d'éviter une redondance d'information, un dossier spécifique contraindra nos différents diagrammes de séquence au fur et à mesure des incrémentation.
 
@@ -15,7 +15,7 @@ L'objectif de ce projet est d'implémenter et d'appliquer les différentes notio
 - [Itération 4](#iteration-4)
 
 ## Installation
-- Assurez-vous d'avoir Maven installé sur votre système.
+- Assurez-vous d'avoir Maven installé sur votre système, la porcédure est décrite [ici](https://maven.apache.org/install.html).
 - Importez le projet vers votre IDE préféré.
 - Dans un terminal, lancez la commande `mvn clean install` afin de construire le projet et d'installer les dépendances.
 - Et enfin, lancez le projet (fichier App.java).
