@@ -1,13 +1,11 @@
-```markdown
-## Projet fil rouge PERSISTENCE_G1_6
+## **Projet fil rouge PERSISTENCE_G1_6**{#projet-fil-rouge-persistence-g1-6}
 
 L'objectif de ce projet est d'implémenter et d'appliquer les différentes notions vues en cours de Patron et Composant. Celui-ci a pour base une frame où l'on peut y disposer des cercles, des carrés et des rectangles. Au fil de chaque itération, il est demandé d'ajouter de nouvelles fonctionnalités, mettre en place de différents patrons (patron Composite, Visiteur, ...), d'utiliser Java/Maven/Sonar mais aussi d'avoir une couverture de test d'au moins 30%. Par ailleurs, afin d'éviter une redondance d'information, un dossier spécifique contraindra nos différents diagrammes de séquence au fur et à mesure des incrémentation.
 
 ## Table des matières
-- Titre et Description
-- Table des Matières
-- Installation
-- Utilisation
+- [Titre et Description](#projet-fil-rouge-persistence-g1-6)
+- [Installation](#installation)
+- [Utilisation](#utilisation)
 - Conception et réalisation
 - Documentation
 - Test
@@ -16,21 +14,21 @@ L'objectif de ce projet est d'implémenter et d'appliquer les différentes notio
 - Itération 3
 - Itération 4
 
-## Installation
+## Installation {#installation}
 - Assurez-vous d'avoir Maven installé sur votre système.
 - Importez le projet vers votre IDE préféré.
 - Dans un terminal, lancez la commande `mvn clean install` afin de construire le projet et d'installer les dépendances.
 - Et enfin, lancez le projet (fichier App.java).
 
-## Utilisation
+## Utilisation {#utilisation}
 Comme mentionné dans la description plus haut, ce programme permet de dessiner des cercles, des carrés et des ronds. Il est par ailleurs possible de les déplacer, les supprimer (Ctrl-Z) ou d'en faire des groupes.
 
-## Conception et réalisation
+## Conception et réalisation {#conception-et-realisation}
 - Base du projet fournie par l'IM2AG de Grenoble (création de la frame, ajout des figures et de l'interface graphique).
 - CHAZEAU Vincent (alias Vin's) conception/réalisation et implémentation des incrémentations imposées en cours.
 - CHARRE Kyllian (alias Kyk's) conception/réalisation et implémentation des incrémentations imposées en cours.
 
-## Documentation
+## Documentation {#documentation}
 Durant tout le projet, il est fait en sorte d'utiliser le moins de commentaires possible. La raison en est que le code parle de lui-même, cela passe par une nomenclature explicite, un suivi des conventions ainsi que par une organisation logique du code. Les noms de variables, de fonctions et de classes sont choisis de manière à refléter clairement leur fonction et leur rôle au sein du projet. Cependant, en cas de nécessité, des commentaires sont ajoutés de manière à fournir des informations importantes ne pouvant pas être déduites directement du code.
 
 ## Test
@@ -38,7 +36,7 @@ Pour visualiser la couverture de test, il faut au préalable être connecté au 
 - Installer `Cisco AnyConnect Secure Mobility Client`.
 - Se connecter à `vpn.grenet.fr` en tant qu'étudiant ou personnel (identifiant et mot de passe seront nécessaires).
 
-Puis il suffit d'accéder à la page d'accueil de notre projet (`http://im2ag-sonar.u-ga.fr:9000/dashboard?id=fr.uga.miage.m1%3APersistence_g1_6`) pour pouvoir visualiser le pourcentage de couverture.
+Puis il suffit d'accéder à la page d'accueil de notre projet [ici](http://im2ag-sonar.u-ga.fr:9000/dashboard?id=fr.uga.miage.m1%3APersistence_g1_6) pour pouvoir visualiser le pourcentage de couverture.
 
 ## Itération 1
 
@@ -109,7 +107,5 @@ TODO MA BABY
 
 ### Résultat
 
-La forme a été ajoutée avec succès et dans le temps imparti, elle est conforme avec le reste du projet (suit la même logique et
-
- fonctionnement que toutes les autres formes).
+La forme a été ajoutée avec succès et dans le temps imparti, elle est conforme avec le reste du projet (suit la même logique et fonctionnement que toutes les autres formes).
 ```
