@@ -1,9 +1,5 @@
-## Projet fil rouge PERSISTENCE_G1_6
-
-L'objectif de ce projet est d'implémenter et d'appliquer les différentes notions vues en cours de Patron et Composant. Celui-ci a pour base une frame où l'on peut y disposer des cercles, des carrés et des rectangles. Au fil de chaque itération, il est demandé d'ajouter de nouvelles fonctionnalités, mettre en place de différents patrons (patron Composite, Visiteur, ...), d'utiliser Java/Maven/Sonar mais aussi d'avoir une couverture de test d'au moins 30%. Par ailleurs, afin d'éviter une redondance d'information, un dossier spécifique contraindra nos différents diagrammes de séquence au fur et à mesure des incrémentation.
-
 ## Table des matières
-- [Titre et Description](#projet-fil-rouge-persistence-g1-6)
+- [Description du projet](#projet-fil-rouge-persistence_g1_6)
 - [Installation](#installation)
 - [Utilisation](#utilisation)
 - [Conception et réalisation](#conception-et-realisation)
@@ -14,29 +10,41 @@ L'objectif de ce projet est d'implémenter et d'appliquer les différentes notio
 - [Itération 3](#iteration-3)
 - [Itération 4](#iteration-4)
 
+  
+## Projet fil rouge PERSISTENCE_G1_6
+
+L'objectif de ce projet est d'implémenter et d'appliquer les différentes notions vues en cours de Patron et Composant. Celui-ci a pour base une frame où l'on peut y disposer des cercles, des carrés et des rectangles. Au fil de chaque itération, il est demandé d'ajouter de nouvelles fonctionnalités, mettre en place différents patrons (patron Composite, Visiteur, ...), d'utiliser Java/Maven/Sonar mais aussi d'avoir une couverture de test d'au moins 30%. Par ailleurs, afin d'éviter une redondance d'information entre moodle et le README, un dossier spécifique dans ce git contraindra nos différents diagrammes au fur et à mesure des incrémentations.
+
+
 ## Installation
-- Assurez-vous d'avoir Maven installé sur votre système, la porcédure est décrite [ici](https://maven.apache.org/install.html).
+- Assurez-vous d'avoir Maven installé sur votre système, la procédure est décrite [ici](https://maven.apache.org/install.html).
 - Importez le projet vers votre IDE préféré.
 - Dans un terminal, lancez la commande `mvn clean install` afin de construire le projet et d'installer les dépendances.
 - Et enfin, lancez le projet (fichier App.java).
 
+
 ## Utilisation
-Comme mentionné dans la description plus haut, ce programme permet de dessiner des cercles, des carrés et des ronds. Il est par ailleurs possible de les déplacer, les supprimer (Ctrl-Z) ou d'en faire des groupes.
+Comme mentionné dans la description plus haut, ce programme permet de dessiner des cercles, des carrés et des ronds. Il est par ailleurs possible de les déplacer, les supprimer (Ctrl-Z), d'en faire des groupes, de dessiner un cube (ajout de fonctionnalité au fil des incrémentations).
 
-## Conception et réalisation
-- Base du projet fournie par l'IM2AG de Grenoble (création de la frame, ajout des figures et de l'interface graphique).
-- CHAZEAU Vincent (alias Vin's) conception/réalisation et implémentation des incrémentations imposées en cours.
-- CHARRE Kyllian (alias Kyk's) conception/réalisation et implémentation des incrémentations imposées en cours.
-
-## Documentation {#documentation}
-Durant tout le projet, il est fait en sorte d'utiliser le moins de commentaires possible. La raison en est que le code parle de lui-même, cela passe par une nomenclature explicite, un suivi des conventions ainsi que par une organisation logique du code. Les noms de variables, de fonctions et de classes sont choisis de manière à refléter clairement leur fonction et leur rôle au sein du projet. Cependant, en cas de nécessité, des commentaires sont ajoutés de manière à fournir des informations importantes ne pouvant pas être déduites directement du code.
 
 ## Test
 Pour visualiser la couverture de test, il faut au préalable être connecté au VPN de l'UGA (ou physiquement sur un ordinateur de l'UGA) :
 - Installer `Cisco AnyConnect Secure Mobility Client`.
 - Se connecter à `vpn.grenet.fr` en tant qu'étudiant ou personnel (identifiant et mot de passe seront nécessaires).
 
-Puis il suffit d'accéder à la page d'accueil de notre projet [ici](http://im2ag-sonar.u-ga.fr:9000/dashboard?id=fr.uga.miage.m1%3APersistence_g1_6) pour pouvoir visualiser le pourcentage de couverture.
+A la suite de cela, il sera possible d'accéder à la page d'accueil de notre projet [ici](http://im2ag-sonar.u-ga.fr:9000/dashboard?id=fr.uga.miage.m1%3APersistence_g1_6) pour pouvoir visualiser le pourcentage de couverture.
+
+
+## Documentation {#documentation}
+Durant tout le projet, nous essayons d'utiliser le moins possible de commentaires. La raison en est que le code parle de lui-même, cela passe par une nomenclature explicite, un suivi des conventions ainsi que par une organisation logique du code. Les noms de variables, de fonctions et de classes sont choisis de manière à refléter clairement leur fonctions et leur rôles au sein du projet. Cependant, en cas de nécessité, des commentaires sont et seront ajoutés de manière à fournir des informations importantes ne pouvant pas être déduites directement du code.
+
+
+## Conception et réalisation
+- Base du projet fournie par l'IM2AG de Grenoble (création de la frame, ajout des figures et de l'interface graphique).
+- CHAZEAU Vincent : conception/réalisation et implémentation des incrémentations imposées en cours.
+- CHARRE Kyllian : conception/réalisation et implémentation des incrémentations imposées en cours.
+
+
 
 ## Itération 1
 
@@ -55,6 +63,9 @@ Les problèmes rencontrés ont été minimes, mais présents lors de la mise en 
 ### Résultat
 
 Tous les objectifs ont été remplis et la dette a été réduite, passant de 4h à moins d'une heure.
+
+
+
 
 ## Itération 2
 
@@ -75,6 +86,9 @@ Tous les objectifs ont été remplis et la dette a été réduite, passant de 4h
 
 Tous les objectifs ont été réalisés, tout en maintenant une dette technique d'environ 1h et sans régression des précédentes fonctionnalités.
 
+
+
+
 ## Itération 3
 
 ### Objectif
@@ -91,6 +105,9 @@ Tous les objectifs ont été réalisés, tout en maintenant une dette technique 
 ### Résultat
 
 TODO MA BABY
+
+
+
 
 ## Itération 4
 
