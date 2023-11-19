@@ -15,10 +15,10 @@ Par ailleurs afin d'éviter une redondance d'information, un dossier spécifique
   - [Conception et réalisation](#Conception-et-réalisation)
   - [Documentation](#documentation)
   - [Test](#test)
-  - [Itération 1](#iteration-1-:)
-  - [Itération 2](#iteration-2-:)
-  - [Itération 3](#iteration-3-:)
-  - [Itération 4](#iteration-4-:)
+  - [Itération 1](#iteration-1)
+  - [Itération 2](#iteration-2)
+  - [Itération 3](#iteration-3)
+  - [Itération 4](#iteration-4)
 
 ## Installation
 - Assurez vous d'avoir Maven d'installé sur votre systeme
@@ -50,7 +50,7 @@ Pour visualiser la couverture de test, il faut au préalable être connecté au 
 Puis il suffit d'accéder à la page d'acceuil de notre projet (`http://im2ag-sonar.u-ga.fr:9000/dashboard?id=fr.uga.miage.m1%3APersistence_g1_6`)
 pour pouvoir visualiser le pourcecntage de couverture 
 
-### Itération 1 :
+## Itération 1
 
 #### Objectif 
 
@@ -69,7 +69,7 @@ Le principale problème a été de bien s'imprégner du projet et de l'architect
 
 Tous les objectifs ont été rempli et la dette a été réduite passant de 4h à moins d'une heure.
 
-### Itération 2 :
+## Itération 2
 
 #### Objectif 
 
@@ -87,7 +87,7 @@ Tous les objectifs ont été rempli et la dette a été réduite passant de 4h �
 
 Tous les objectifs ont été réalisés, tout en maintenant une dette technique autour de 1h et sans régression des précédentes fonctionnalités.
 
-### Itération 3 :
+## Itération 3
 
 #### Objectif 
 
@@ -105,7 +105,7 @@ Tous les objectifs ont été réalisés, tout en maintenant une dette technique 
 
 TODO MA BABY
 
-### Itération 4 :
+## Itération 4
 
 #### Objectif 
 
