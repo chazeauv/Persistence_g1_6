@@ -6,24 +6,24 @@ L'objectif de ce projet est d'implémenter et d'appliquer les différentes notio
 - [Titre et Description](#projet-fil-rouge-persistence-g1-6)
 - [Installation](#installation)
 - [Utilisation](#utilisation)
-- Conception et réalisation
-- Documentation
-- Test
-- Itération 1
-- Itération 2
-- Itération 3
-- Itération 4
+- [Conception et réalisation](#conception-et-realisation)
+- [Documentation](#documentation)
+- [Test](#test)
+- [Itération 1](#iteration-1)
+- [Itération 2](#iteration-2)
+- [Itération 3](#iteration-3)
+- [Itération 4](#iteration-4)
 
-## Installation {#installation}
+## Installation
 - Assurez-vous d'avoir Maven installé sur votre système.
 - Importez le projet vers votre IDE préféré.
 - Dans un terminal, lancez la commande `mvn clean install` afin de construire le projet et d'installer les dépendances.
 - Et enfin, lancez le projet (fichier App.java).
 
-## Utilisation {#utilisation}
+## Utilisation
 Comme mentionné dans la description plus haut, ce programme permet de dessiner des cercles, des carrés et des ronds. Il est par ailleurs possible de les déplacer, les supprimer (Ctrl-Z) ou d'en faire des groupes.
 
-## Conception et réalisation {#conception-et-realisation}
+## Conception et réalisation
 - Base du projet fournie par l'IM2AG de Grenoble (création de la frame, ajout des figures et de l'interface graphique).
 - CHAZEAU Vincent (alias Vin's) conception/réalisation et implémentation des incrémentations imposées en cours.
 - CHARRE Kyllian (alias Kyk's) conception/réalisation et implémentation des incrémentations imposées en cours.
@@ -108,4 +108,3 @@ TODO MA BABY
 ### Résultat
 
 La forme a été ajoutée avec succès et dans le temps imparti, elle est conforme avec le reste du projet (suit la même logique et fonctionnement que toutes les autres formes).
-```
