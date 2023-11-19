@@ -7,15 +7,11 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.List;
-import java.util.EnumMap;
-import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
-
-import edu.uga.singleshape.CubePanel;
 
 /**
  * This class represents the main application class, which is a JFrame subclass
@@ -23,7 +19,7 @@ import edu.uga.singleshape.CubePanel;
  *
  * @author <a href="mailto:christophe.saint-marcel@univ-grenoble-alpes.fr">Christophe</a>
  */
-public class JDrawingFrame extends JFrame implements MouseListener, MouseMotionListener {
+public class JDrawingFrame extends JFrame {
 
     private enum Shapes {
 
@@ -37,26 +33,24 @@ public class JDrawingFrame extends JFrame implements MouseListener, MouseMotionL
     private static final String CUBE = "cube";
 
     private transient SimpleShape shape;
-    private transient List<SimpleShape> mShapes = new ArrayList<SimpleShape>();
 
-    private transient List<List<SimpleShape>> mShapesHistory = new ArrayList<List<SimpleShape>>();
+    private transient SimpleShape draggedShape;
+
+    private transient List<SimpleShape> mShapes = new ArrayList<SimpleShape>();
 
     private static final long serialVersionUID = 1L;
 
     private JToolBar mToolBar;
 
-    private Shapes mSelected;
+    private ShapeFactory.Shapes mSelected;
 
     private JPanel mPanel;
 
     private JLabel mLabel;
 
+    private Point mLastPressed;
+
     private static final Logger LOGGER = Logger.getLogger(JDrawingFrame.class.getName());
-    private LogRecord warnRec = new LogRecord(Level.WARNING, "Warning");
-
-    private String shapeMovedType = "";
-
-    private transient CommandControl commandControl = new CommandControl();
 
     private Command  command;
 
@@ -67,34 +61,43 @@ public class JDrawingFrame extends JFrame implements MouseListener, MouseMotionL
     /**
      * Tracks buttons to manage the background.
      */
-    private EnumMap<Shapes, JButton> mButtons = new EnumMap<>(Shapes.class);
+    private Map<ShapeFactory.Shapes, JButton> mButtons = new EnumMap<>(ShapeFactory.Shapes.class);
 
     /**
      * Default constructor that populates the main window.
      * @param frameName
      */
-    public JDrawingFrame(String frameName) {
+    public JDrawingFrame(String frameName, Client cli) {
+
         super(frameName);
+
         // Instantiates components
         mToolBar = new JToolBar("Toolbar");
         mPanel = new JPanel();
         mPanel.setBackground(Color.WHITE);
         mPanel.setLayout(null);
         mPanel.setMinimumSize(new Dimension(400, 400));
-        mPanel.addMouseListener(this);
-        mPanel.addMouseMotionListener(this);
+        mPanel.addMouseListener(cli);
+        mPanel.addMouseMotionListener(cli);
         mLabel = new JLabel(" ", SwingConstants.LEFT);
+
+        mPanel.setFocusable(true);
+        mPanel.requestFocusInWindow();
+
         // Fills the panel
         setLayout(new BorderLayout());
         add(mToolBar, BorderLayout.NORTH);
         add(mPanel, BorderLayout.CENTER);
         add(mLabel, BorderLayout.SOUTH);
+
         // Add shapes in the menu
-        addShape(Shapes.SQUARE, new ImageIcon("src/main/java/fr/uga/miage/m1/polygons/gui/images/square.png"));
-        addShape(Shapes.TRIANGLE, new ImageIcon("src/main/java/fr/uga/miage/m1/polygons/gui/images/triangle.png"));
-        addShape(Shapes.CIRCLE, new ImageIcon("src/main/java/fr/uga/miage/m1/polygons/gui/images/circle.png"));
-        addShape(Shapes.CUBE, new ImageIcon("src/main/java/fr/uga/miage/m1/polygons/gui/images/underc.png"));
+        addShape(ShapeFactory.Shapes.SQUARE, new ImageIcon("src/main/java/fr/uga/miage/m1/polygons/gui/images/square.png"));
+        addShape(ShapeFactory.Shapes.TRIANGLE, new ImageIcon("src/main/java/fr/uga/miage/m1/polygons/gui/images/triangle.png"));
+        addShape(ShapeFactory.Shapes.CIRCLE, new ImageIcon("src/main/java/fr/uga/miage/m1/polygons/gui/images/circle.png"));
+        addShape(ShapeFactory.Shapes.CUBE, new ImageIcon("src/main/java/fr/uga/miage/m1/polygons/gui/images/underc.png"));
         addButton("EXPORT", new ImageIcon("src/main/java/fr/uga/miage/m1/polygons/gui/images/underc.png"));
+
+        // Sets the frame initial size
         setPreferredSize(new Dimension(400, 400));
     }
 
@@ -103,7 +106,7 @@ public class JDrawingFrame extends JFrame implements MouseListener, MouseMotionL
      * @param shape The name of the injected <tt>SimpleShape</tt>.
      * @param icon The icon associated with the injected <tt>SimpleShape</tt>.
      */
-    private void addShape(Shapes shape, ImageIcon icon) {
+    private void addShape(ShapeFactory.Shapes shape, ImageIcon icon) {
         JButton button = new JButton(icon);
         button.setBorderPainted(false);
         mButtons.put(shape, button);
@@ -139,6 +142,8 @@ public class JDrawingFrame extends JFrame implements MouseListener, MouseMotionL
 
         String fileType = "";
         StringBuilder export = new StringBuilder();
+
+        LogRecord warnRec = new LogRecord(Level.WARNING, "Warning");
 
         // Ouvre une fenêtre pour choisir le type de fichier
         fileType = javax.swing.JOptionPane.showInputDialog("Quel type de fichier voulez-vous exporter ? (XML ou JSON)");
@@ -205,203 +210,12 @@ public class JDrawingFrame extends JFrame implements MouseListener, MouseMotionL
     }
 
 
-    /**
-     * Implements method for the <tt>MouseListener</tt> interface to
-     * draw the selected shape into the drawing canvas.
-     * @param evt The associated mouse event.
-     */
-    public void mouseClicked(MouseEvent evt) {
-
-        int evtX = evt.getX();
-        int evtY = evt.getY();
-
-        if (mPanel.contains(evtX, evtY)) {
-            command = new CShape(this, evtX, evtY);
-            commandControl.addCommand(command);
-            commandControl.executeCommands();
-        }
-    }
-
-    public void instantiateShape(int evtX, int evtY){
-        if (mPanel.contains(evtX, evtY)) {
-
-            switch(mSelected) {
-                case CIRCLE:
-                    shape = new Circle(evtX, evtY);
-                    drawShape(shape);
-                    break;
-                case TRIANGLE:
-                    shape = new Triangle(evtX, evtY);
-                    drawShape(shape);
-                    break;
-                case SQUARE:
-                    shape = new Square(evtX, evtY);
-                    drawShape(shape);
-                    break;
-                case CUBE:
-                    shape = new Cube(evtX, evtY);
-                    drawShape(shape);
-                    break;
-                default:
-                    warnRec.setMessage("No shape found");
-                    LOGGER.log(warnRec);
-            }
-            if("".equals(shapeMovedType)) addShapesStateToHistory();
-        }
-    }
-
-    public void drawShape(SimpleShape shape){
-        Graphics2D g2 = (Graphics2D) mPanel.getGraphics();
-        shape.draw(g2);
-        addShapeToTable(shape);
-    }
-    public void addShapeToTable(SimpleShape shape) {
-        shapeMovedType = "";
-        this.mShapes.add(shape);
-    }
-
-    private void addShapesStateToHistory() {
-
-        List<SimpleShape> mShapesCopy = new ArrayList<SimpleShape>(this.mShapes);
-        this.mShapesHistory.add(mShapesCopy);
-    }
-
-    /**
-     * Implements an empty method for the <tt>MouseListener</tt> interface.
-     * @param evt The associated mouse event.
-     */
-    public void mouseEntered(MouseEvent evt) {
-        //TODO
-    }
-
-    /**
-     * Implements an empty method for the <tt>MouseListener</tt> interface.
-     * @param evt The associated mouse event.
-     */
-    public void mouseExited(MouseEvent evt) {
-        mLabel.setText(" ");
-        mLabel.repaint();
-    }
-
-    /**
-     * Implements method for the <tt>MouseListener</tt> interface to initiate
-     * shape dragging.
-     * @param evt The associated mouse event.
-     */
-    public void mousePressed(MouseEvent evt) {
-        //TODO
-    }
-
-    private void showShapes(List<SimpleShape> shapes) {
-        for (SimpleShape shape : shapes) {
-            LogRecord infoShapes = new LogRecord(Level.INFO, shape.getClass().getSimpleName() + " : " + shape.getX() + ", " + shape.getY());
-            LOGGER.log(infoShapes);
-        }
-    }
-
-    /**
-     * Implements method for the <tt>MouseListener</tt> interface to complete
-     * shape dragging.
-     * @param evt The associated mouse event.
-     */
-    public void mouseReleased(MouseEvent evt) {
-        int x = evt.getX();
-        int y = evt.getY();
-
-        if (!"".equals(shapeMovedType) && mPanel.contains(x, y)) {
-            command = new Drop(this, x, y);
-            commandControl.addCommand(command);
-            commandControl.executeCommands();
-        }
-    }
-
-    public void drop(int x, int y){
-        switch(shapeMovedType) {
-            case CIRCLE:
-                shape = new Circle(x, y);
-                drawShape(shape);
-                break;
-            case TRIANGLE:
-                shape = new Triangle(x, y);
-                drawShape(shape);
-                break;
-            case SQUARE:
-                shape = new Square(x, y);
-                drawShape(shape);
-                break;
-            default:
-                warnRec.setMessage("No shape found");
-                LOGGER.log(warnRec);
-        }
-        if(!"".equals(shapeMovedType)) addShapesStateToHistory();
-    }
-
-    public void undoDrop(){
-        mShapes.remove(mShapes.size()-1);
-        paintComponents25(this.getGraphics());
-    }
-
-    /**
-     * Implements method for the <tt>MouseMotionListener</tt> interface to
-     * move a dragged shape.
-     * @param evt The associated mouse event.
-     */
-    public void mouseDragged(MouseEvent evt) {
-        int x = evt.getX();
-        int y = evt.getY();
-
-        if("".equals(shapeMovedType)){
-            command = new Drag(this, x, y);
-            commandControl.addCommand(command);
-            commandControl.executeCommands();
-        }
-    }
-
-    public void drag(int x, int y){
-        for (SimpleShape shape : mShapes) {
-            if (shape.contains(x, y)) {
-                mShapes.remove(shape);
-                shapeMovedType = shape.getClass().getSimpleName().toLowerCase();
-                paintComponents25(this.getGraphics());
-                break;
-            }
-        }
-    }
-
-    public void undoDrag(){
-        setShapes(mShapesHistory.get(mShapesHistory.size()-1));
-        paintComponents25(this.getGraphics());
-    }
-
-    /**
-     * Implements an empty method for the <tt>MouseMotionListener</tt>
-     * interface.
-     * @param evt The associated mouse event.
-     */
-    public void mouseMoved(MouseEvent evt) {
-        modifyLabel(evt);
-    }
-
-    private void modifyLabel(MouseEvent evt) {
-        mLabel.setText("(" + evt.getX() + "," + evt.getY() + ")");
-    }
-
-
-    public void undoShape() {
-
-        if (!mShapes.isEmpty()) {
-            mShapes.remove(mShapes.size() - 1);
-            paintComponents25(this.getGraphics());
-        }
-    }
-
-
     //Getters
     public List<SimpleShape> getShapes() {
         return mShapes;
     }
 
-    public Shapes getSelected() {
+    public ShapeFactory.Shapes getSelected() {
         return mSelected;
     }
 
@@ -417,8 +231,12 @@ public class JDrawingFrame extends JFrame implements MouseListener, MouseMotionL
         return shape;
     }
 
-    public CommandControl getCommandControl() {
-        return commandControl;
+    public Point getLastPressed() {
+        return mLastPressed;
+    }
+
+    public SimpleShape getDraggedShape() {
+        return draggedShape;
     }
 
     public Command getCommand() {
@@ -430,7 +248,11 @@ public class JDrawingFrame extends JFrame implements MouseListener, MouseMotionL
         this.mShapes = shapes;
     }
 
-    public void setSelected(Shapes selected) {
+    public void setSimpleShape(SimpleShape shape) {
+        this.shape = shape;
+    }
+
+    public void setSelected(ShapeFactory.Shapes selected) {
         this.mSelected = selected;
     }
 
@@ -438,29 +260,61 @@ public class JDrawingFrame extends JFrame implements MouseListener, MouseMotionL
         this.mPanel = panel;
     }
 
-    public void paintComponents25(Graphics g) {
-        super.paintComponents(g);
+    public void setLastPressed(Point p) {
+        this.mLastPressed = p;
+    }
+
+    public void setDraggedShape(SimpleShape shape) {
+        this.draggedShape = shape;
+    }
+
+    public void setCommand(Command command) {
+        this.command = command;
+    }
+
+    //Graphique
+    public void instantiateShape(SimpleShape shp){
+
+        shp.draw((Graphics2D) mPanel.getGraphics());
+        addShapeToTable(shp);
+    }
+
+    public void drawShape(SimpleShape shape){
         Graphics2D g2 = (Graphics2D) mPanel.getGraphics();
-        for (SimpleShape shape : mShapes) {
-            String className = "";
-            className = shape.getClass().getSimpleName().toLowerCase();
-            switch (className) {
-                case CIRCLE:
-                    new Circle(shape.getX()+25,shape.getY()+25).draw(g2);
-                    break;
-                case TRIANGLE:
-                    new Triangle(shape.getX()+25,shape.getY()+25).draw(g2);
-                    break;
-                case SQUARE:
-                    new Square(shape.getX()+25,shape.getY()+25).draw(g2);
-                    break;
-                case CUBE:
-                    new Cube(shape.getX(),shape.getY()).draw(g2);
-                    break;
-                default:
-                    warnRec.setMessage("No shape found");
-                    LOGGER.log(warnRec);
-            }
+        shape.draw(g2);
+        addShapeToTable(shape);
+    }
+    public void addShapeToTable(SimpleShape shape) {
+        this.mShapes.add(shape);
+    }
+
+    public void moveShape(SimpleShape shape, int x, int y) {
+        shape.setX(x);
+        shape.setY(y);
+        paintComponents(this.getGraphics());
+    }
+
+    //Debug
+    private void showShapes(List<SimpleShape> shapes) {
+        for (SimpleShape shape : shapes) {
+            LogRecord infoShapes = new LogRecord(Level.INFO, shape.getClass().getSimpleName() + " : " + shape.getX() + ", " + shape.getY());
+            LOGGER.log(infoShapes);
+        }
+    }
+
+    public void undoShape() {
+
+        if (!mShapes.isEmpty()) {
+            mShapes.remove(mShapes.size() - 1);
+            paintComponents(this.getGraphics());
+        }
+    }
+
+    @Override
+    public void paintComponents(Graphics g) {
+        super.paintComponents(g);
+        for (SimpleShape mShape : mShapes) {
+            mShape.draw((Graphics2D) mPanel.getGraphics());
         }
     }
 
@@ -473,13 +327,12 @@ public class JDrawingFrame extends JFrame implements MouseListener, MouseMotionL
 
         public void actionPerformed(ActionEvent evt) {
             // Itère sur tous les boutons
-            Iterator<Shapes> keys = mButtons.keySet().iterator();
-            while (keys.hasNext()) {
-                Shapes shape = keys.next();
-                JButton btn = mButtons.get(shape);
-                if (evt.getActionCommand().equals(shape.toString())) {
+            for (Map.Entry<ShapeFactory.Shapes, JButton> buttonEntry: mButtons.entrySet()) {
+                ShapeFactory.Shapes selectedShape = buttonEntry.getKey();
+                JButton btn = mButtons.get(selectedShape);
+                if (evt.getActionCommand().equals(selectedShape.toString())) {
                     btn.setBorderPainted(true);
-                    mSelected = shape;
+                    mSelected = selectedShape;
                 } else {
                     btn.setBorderPainted(false);
                 }

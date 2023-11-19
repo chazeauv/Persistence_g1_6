@@ -7,19 +7,22 @@ public class CShape implements Command{
 
         private final JDrawingFrame drawing;
 
+        private SimpleShape shape;
+
         private int x;
 
         private int y;
 
-        public CShape(JDrawingFrame drawing, int x, int y) {
+        public CShape(JDrawingFrame drawing, SimpleShape shape, int x, int y) {
 
                 this.drawing = drawing;
+                this.shape = shape;
                 this.x = x;
                 this.y = y;
         }
 
         @Override
-        public void execute() { drawing.instantiateShape(x, y); }
+        public void execute() { drawing.instantiateShape(shape); }
 
         @Override
         public void undo() { drawing.undoShape(); }

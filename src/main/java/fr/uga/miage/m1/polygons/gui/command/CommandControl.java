@@ -19,22 +19,22 @@ public class CommandControl {
         commands.add(command);
     }
 
-    public Command getOldCommand(){
-        return commandsHistory.get(commandsHistory.size()-1);
-    }
-
-    public void addCommands(){
+    public void addCommands(String mode){
 
         Command command = getOldCommand();
 
-        if(command.getClass().getSimpleName().equalsIgnoreCase("drop")){
-            addCommand(command);
+        if("undo".equals(mode)){
+            if(command.getClass().getSimpleName().equalsIgnoreCase("drop")){
+                addCommand(command);
+                removeLastCommandFromHistory();
+                addCommand(getOldCommand());
+            } else {
+                addCommand(command);
+            }
             removeLastCommandFromHistory();
-            addCommand(getOldCommand());
-        } else {
+        } else if("do".equals(mode)) {
             addCommand(command);
         }
-        removeLastCommandFromHistory();
     }
 
     public void removeCommand(Command command) {
@@ -47,6 +47,14 @@ public class CommandControl {
 
     public ArrayList<Command> getCommands() {
         return commands;
+    }
+
+    public Command getLastCommand(){
+        return commands.get(commands.size()-1);
+    }
+
+    public Command getOldCommand(){
+        return commandsHistory.get(commandsHistory.size()-1);
     }
 
     public void executeCommands() {
@@ -66,7 +74,6 @@ public class CommandControl {
         while (iterator.hasNext()) {
             Command command = iterator.next();
             command.undo();
-            commandsHistory.remove(command);
             iterator.remove();
         }
     }

@@ -87,5 +87,21 @@ public class Square implements SimpleShape, Visitable {
         return mY;
     }
 
+    /**
+     * Implements the <tt>SimpleShape.setX()</tt> method for the visitor
+     * @param x
+     */
+    public void setX(int x) {
+        mX = x;
+    }
+
+    /**
+     * Implements the <tt>SimpleShape.setY()</tt> method for the visitor
+     * @param y
+     */
+    public void setY(int y) {
+        mY = y;
+    }
+
     public boolean contains(int x, int y) { return new Rectangle2D.Double(mX, mY, 50, 50).contains(x, y); }
 }

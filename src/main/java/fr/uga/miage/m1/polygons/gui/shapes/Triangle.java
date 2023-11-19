@@ -89,6 +89,14 @@ public class Triangle implements SimpleShape, Visitable {
         return mY;
     }
 
+    public void setX(int x) {
+        mX = x;
+    }
+
+    public void setY(int y) {
+        mY = y;
+    }
+
     public boolean contains(int x, int y) {
 
         int mX25 = mX+25;

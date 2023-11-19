@@ -12,20 +12,30 @@ public class Cube implements SimpleShape{
         this.mX = mX;
         this.mY = mY;
     }
-    @Override
+
     public void draw(Graphics2D g2) {
         CubePanel c = new CubePanel(100,mX,mY);
         c.paintComponent(g2);
     }
 
-    @Override
+
     public int getX() {
         return mX;
     }
-    @Override
+
     public int getY() {
         return mY;
     }
+
+    public void setX(int x) {
+
+    }
+
+    @Override
+    public void setY(int y) {
+
+    }
+
     @Override
     public boolean contains(int x, int y) {
         return false;

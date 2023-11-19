@@ -1,8 +1,9 @@
 package commandTest;
 
+import fr.uga.miage.m1.polygons.gui.Client;
 import fr.uga.miage.m1.polygons.gui.JDrawingFrame;
+import fr.uga.miage.m1.polygons.gui.command.CShape;
 import fr.uga.miage.m1.polygons.gui.command.CommandControl;
-import fr.uga.miage.m1.polygons.gui.command.UndoAction;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -18,13 +19,12 @@ public class CommandControlTest {
 
         //given
         CommandControl commandControl = new CommandControl();
-
-        JDrawingFrame drawing = new JDrawingFrame("TestAddCommand");
-        UndoAction undoAction = new UndoAction(drawing);
+        Client cli = new Client("Polygons");
+        CShape command = new CShape(cli.getFrame(), null, 0, 0);
         //when
-        commandControl.addCommand(undoAction);
+        commandControl.addCommand(command);
         //then
-        assert(commandControl.getCommands().contains(undoAction));
+        assert(commandControl.getCommands().contains(command));
     }
 
     @Test
@@ -33,31 +33,29 @@ public class CommandControlTest {
 
         //given
         CommandControl commandControl = new CommandControl();
-
-        JDrawingFrame drawing = new JDrawingFrame("TestRemoveCommand");
-        UndoAction undoAction = new UndoAction(drawing);
+        Client cli = new Client("Polygons");
+        CShape command = new CShape(cli.getFrame(), null, 0, 0);
         //when
-        commandControl.addCommand(undoAction);
-        commandControl.removeCommand(undoAction);
+        commandControl.addCommand(command);
+        commandControl.removeCommand(command);
         //then
-        assert(!commandControl.getCommands().contains(undoAction));
+        assert(!commandControl.getCommands().contains(command));
     }
 
-    @Mock
-    UndoAction undoAction;
+    //@Mock
+    CShape cShape;
     @Test
     @DisplayName("Test executeCommands")
     void testExecuteCommands() {
 
         //given
         CommandControl commandControl = new CommandControl();
-
-        JDrawingFrame drawing = new JDrawingFrame("TestExecuteCommands");
-        undoAction = mock(UndoAction.class);
+        Client cli = new Client("Polygons");
+        cShape = mock(CShape.class);
         //when
-        commandControl.addCommand(undoAction);
+        commandControl.addCommand(cShape);
         commandControl.executeCommands();
         //then
-        verify(undoAction).execute();
+        verify(cShape).execute();
     }
 }

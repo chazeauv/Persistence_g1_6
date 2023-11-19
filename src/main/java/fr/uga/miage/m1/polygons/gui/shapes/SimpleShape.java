@@ -20,5 +20,9 @@ public interface SimpleShape {
 
     int getY();
 
+    void setX(int x);
+
+    void setY(int y);
+
     boolean contains(int x, int y);
 }

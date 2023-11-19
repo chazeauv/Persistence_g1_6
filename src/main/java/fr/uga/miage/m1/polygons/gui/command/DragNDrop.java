@@ -1,23 +1,44 @@
 package fr.uga.miage.m1.polygons.gui.command;
 
 import fr.uga.miage.m1.polygons.gui.JDrawingFrame;
+import fr.uga.miage.m1.polygons.gui.shapes.SimpleShape;
 
-public class Drag implements Command{
+public class DragNDrop implements Command{
 
     private final JDrawingFrame drawing;
+
+    private SimpleShape shape;
+
     private final int evtX;
     private final int evtY;
 
-    public Drag(JDrawingFrame drawing, int x, int y) {
+    private int newX;
+    private int newY;
+
+    public DragNDrop(JDrawingFrame drawing, SimpleShape shape) {
 
         this.drawing = drawing;
-        evtX = x;
-        evtY = y;
+        this.shape = shape;
+        evtX = shape.getX();
+        evtY = shape.getY();
     }
 
-    @Override
-    public void execute() { drawing.drag(evtX, evtY); }
+    public void execute() {
 
-    @Override
-    public void undo() { drawing.undoDrag(); }
+        drawing.moveShape(shape, shape.getX() + newX, shape.getY() + newY);
+        //TODO régler problème décalage
+    }
+
+    public void undo() {
+
+        drawing.moveShape(shape, evtX, evtY);
+    }
+
+    public void setNewX(int x) {
+        newX = x;
+    }
+
+    public void setNewY(int y) {
+        newY = y;
+    }
 }

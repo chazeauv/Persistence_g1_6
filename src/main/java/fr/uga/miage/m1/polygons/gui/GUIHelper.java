@@ -14,35 +14,7 @@ public class GUIHelper {
     GUIHelper() {
     }
 
-    public static void showOnFrame(String frameName){
-
-        JDrawingFrame frame = new JDrawingFrame(frameName);
-
-        frame.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_Z, InputEvent.CTRL_DOWN_MASK), "undo");
-        frame.getRootPane().getActionMap().put("undo", new AbstractAction() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                commandControl = frame.getCommandControl();
-
-                commandControl.addCommands();
-                commandControl.undoCommands();
-                //TODO : del last command from history
-            }
-        });
-
-        //add command to commandhistory when mouseclicked
-        /*frame.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(MouseEvent.MOUSE_CLICKED, 0), "mouseclicked");
-        frame.getRootPane().getActionMap().put("mouseclicked", new AbstractAction() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                Command command = new AddShapeToTable(frame, "circle", 10, 10);
-                commandHistory = new CommandHistory();
-                commandHistory.addCommandsHistory(command);
-            }
-        });*/
-
+    public static void showOnFrame(Client cli){
 
         WindowAdapter wa = new WindowAdapter() {
             @Override
@@ -50,8 +22,8 @@ public class GUIHelper {
                 System.exit(0);
             }
         };
-        frame.addWindowListener(wa);
-        frame.pack();
-        frame.setVisible(true);
+        cli.getFrame().addWindowListener(wa);
+        cli.getFrame().pack();
+        cli.getFrame().setVisible(true);
     }
 }

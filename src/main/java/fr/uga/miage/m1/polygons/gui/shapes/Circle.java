@@ -69,6 +69,14 @@ public class Circle implements SimpleShape, Visitable {
         return mY;
     }
 
+    public void setX(int x) {
+        mX = x;
+    }
+
+    public void setY(int y) {
+        mY = y;
+    }
+
     public boolean contains(int x, int y) {
         return new Ellipse2D.Double(mX, mY, 50, 50).contains(x, y);
     }
