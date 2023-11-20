@@ -5,6 +5,7 @@
 - [Conception et réalisation](#Conception-et-realisation)
 - [Documentation](#documentation)
 - [Test](#test)
+- [Documents de conception](./DIAGRAMME/)
 - [Itération 1](#iteration-1)
 - [Itération 2](#iteration-2)
 - [Itération 3](#iteration-3)
