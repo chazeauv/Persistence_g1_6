@@ -23,7 +23,7 @@ public class Client implements MouseListener, MouseMotionListener {
             @Override
             public void actionPerformed(ActionEvent e) {
 
-                commandControl.addCommands("undo");
+                commandControl.addCommandFromHistory();
                 commandControl.undoCommands();
             }
         });
@@ -108,8 +108,8 @@ public class Client implements MouseListener, MouseMotionListener {
 
         if(frame.getPanel().contains(evt.getX(), evt.getY()) && frame.getDraggedShape() != null){
             Point currentPoint = evt.getPoint();
-            int x = currentPoint.x - frame.getLastPressed().x;
-            int y = currentPoint.y - frame.getLastPressed().y;
+            int x = currentPoint.x - frame.getDraggedShape().getX()-25;
+            int y = currentPoint.y - frame.getDraggedShape().getY()-25;
             DragNDrop dragNDrop = (DragNDrop) commandControl.getLastCommand();
             dragNDrop.setNewX(x);
             dragNDrop.setNewY(y);

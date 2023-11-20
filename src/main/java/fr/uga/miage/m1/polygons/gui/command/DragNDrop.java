@@ -26,7 +26,6 @@ public class DragNDrop implements Command{
     public void execute() {
 
         drawing.moveShape(shape, shape.getX() + newX, shape.getY() + newY);
-        //TODO régler problème décalage
     }
 
     public void undo() {

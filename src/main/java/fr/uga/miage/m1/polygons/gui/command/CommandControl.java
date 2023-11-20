@@ -20,22 +20,11 @@ public class CommandControl {
         commands.add(command);
     }
 
-    public void addCommands(String mode){
+    public void addCommandFromHistory(){
 
         Command command = getOldCommand();
 
-        if("undo".equals(mode)){
-            if(command.getClass().getSimpleName().equalsIgnoreCase("drop")){
-                addCommand(command);
-                removeLastCommandFromHistory();
-                addCommand(getOldCommand());
-            } else {
-                addCommand(command);
-            }
-            removeLastCommandFromHistory();
-        } else if("do".equals(mode)) {
-            addCommand(command);
-        }
+        addCommand(command);
     }
 
     public void removeCommand(Command command) {
@@ -75,6 +64,7 @@ public class CommandControl {
         while (iterator.hasNext()) {
             Command command = iterator.next();
             command.undo();
+            commandsHistory.remove(command);
             iterator.remove();
         }
     }
