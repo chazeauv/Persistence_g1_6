@@ -1,8 +1,6 @@
 package fr.uga.miage.m1.polygons.gui;
 
-import fr.uga.miage.m1.polygons.gui.command.CShape;
-import fr.uga.miage.m1.polygons.gui.command.CommandControl;
-import fr.uga.miage.m1.polygons.gui.command.DragNDrop;
+import fr.uga.miage.m1.polygons.gui.command.*;
 import fr.uga.miage.m1.polygons.gui.shapes.SimpleShape;
 
 import javax.swing.*;
@@ -40,6 +38,10 @@ public class Client implements MouseListener, MouseMotionListener {
      * @param evt The associated mouse event.
      */
     public void mouseClicked(MouseEvent evt) {
+        System.out.println("clicked");
+        if(commandControl.getCommands() != null && commandControl.getCommands().size() > 0 && "cgroup".equalsIgnoreCase(commandControl.getLastCommand().getClass().getSimpleName())){
+            commandControl.removeCommand(commandControl.getLastCommand());
+        }
 
         int evtX = evt.getX();
         int evtY = evt.getY();
@@ -74,16 +76,29 @@ public class Client implements MouseListener, MouseMotionListener {
      * @param evt The associated mouse event.
      */
     public void mousePressed(MouseEvent evt) {
+        System.out.println("pressed");
         if(frame.getPanel().contains(evt.getX(), evt.getY())){
             Point p = new Point(evt.getX(), evt.getY());
             frame.setLastPressed(p);
         }
 
-        for(SimpleShape mShape: frame.getShapes()){
-            if(mShape.contains(evt.getX(),evt.getY())){
-                frame.setDraggedShape(mShape);
-                commandControl.addCommand(new DragNDrop(frame, mShape));
+        boolean shapeFound = false;
+
+        if(!frame.getShapes().isEmpty()){
+            for(SimpleShape mShape: frame.getShapes()){
+                if(mShape.contains(evt.getX(),evt.getY())){
+                    frame.setDraggedShape(mShape);
+                    commandControl.addCommand(new DragNDrop(frame, mShape));
+                    shapeFound = true;
+                }
             }
+        }
+
+        if(!shapeFound){ //TODO tester si mode = création groupe plutôt que shapeFound
+            int x = evt.getX();
+            int y = evt.getY();
+
+            commandControl.addCommand(new CGroup(frame, x, y));
         }
     }
 
@@ -93,9 +108,19 @@ public class Client implements MouseListener, MouseMotionListener {
      * @param evt The associated mouse event.
      */
     public void mouseReleased(MouseEvent evt) {
+        System.out.println("released");
         if(frame.getDraggedShape() != null){
             commandControl.executeCommands();
             frame.setDraggedShape(null);
+        }
+
+        if("CGroup".equals(commandControl.getLastCommand().getClass().getSimpleName())){
+            CGroup cGroup = (CGroup) commandControl.getLastCommand();
+            cGroup.setX2(evt.getX());
+            cGroup.setY2(evt.getY());
+
+            commandControl.executeCommands();
+
         }
     }
 

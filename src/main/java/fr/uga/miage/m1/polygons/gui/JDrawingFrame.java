@@ -1,14 +1,21 @@
 package fr.uga.miage.m1.polygons.gui;
 
-import fr.uga.miage.m1.polygons.gui.command.*;
-import fr.uga.miage.m1.polygons.gui.shapes.*;
+import fr.uga.miage.m1.polygons.gui.command.Command;
+import fr.uga.miage.m1.polygons.gui.shapes.Group;
+import fr.uga.miage.m1.polygons.gui.shapes.SimpleShape;
 
 import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.plaf.basic.BasicSplitPaneDivider;
+import javax.swing.plaf.basic.BasicSplitPaneUI;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
@@ -25,13 +32,21 @@ public class JDrawingFrame extends JFrame {
 
     private transient SimpleShape draggedShape;
 
+    private transient Group draggedGroup;
+
     private transient List<SimpleShape> mShapes = new ArrayList<>();
+
+    private transient List<Group> mGroups = new ArrayList<>();
 
     private static final long serialVersionUID = 1L;
 
     private JToolBar mToolBar;
 
+    private JPanel mGroupsMenu;
+
     private ShapeFactory.Shapes mSelected;
+
+    private Group mSelectedGroup;
 
     private JPanel mPanel;
 
@@ -62,6 +77,7 @@ public class JDrawingFrame extends JFrame {
 
         // Instantiates components
         mToolBar = new JToolBar("Toolbar");
+        mToolBar.setBackground(Color.WHITE);
         mPanel = new JPanel();
         mPanel.setBackground(Color.WHITE);
         mPanel.setLayout(null);
@@ -80,14 +96,55 @@ public class JDrawingFrame extends JFrame {
         add(mLabel, BorderLayout.SOUTH);
 
         // Add shapes in the menu
-        addShape(ShapeFactory.Shapes.SQUARE, new ImageIcon("src/main/java/fr/uga/miage/m1/polygons/gui/images/square.png"));
-        addShape(ShapeFactory.Shapes.TRIANGLE, new ImageIcon("src/main/java/fr/uga/miage/m1/polygons/gui/images/triangle.png"));
-        addShape(ShapeFactory.Shapes.CIRCLE, new ImageIcon("src/main/java/fr/uga/miage/m1/polygons/gui/images/circle.png"));
-        addShape(ShapeFactory.Shapes.CUBE, new ImageIcon("src/main/java/fr/uga/miage/m1/polygons/gui/images/underc.png"));
-        addButton("EXPORT", new ImageIcon("src/main/java/fr/uga/miage/m1/polygons/gui/images/underc.png"));
+        addShape("square", ShapeFactory.Shapes.SQUARE, new ImageIcon("src/main/java/fr/uga/miage/m1/polygons/gui/images/square.png"));
+        addShape("triangle", ShapeFactory.Shapes.TRIANGLE, new ImageIcon("src/main/java/fr/uga/miage/m1/polygons/gui/images/triangle.png"));
+        addShape("circle", ShapeFactory.Shapes.CIRCLE, new ImageIcon("src/main/java/fr/uga/miage/m1/polygons/gui/images/circle.png"));
+        addShape("cube", ShapeFactory.Shapes.CUBE, new ImageIcon("src/main/java/fr/uga/miage/m1/polygons/gui/images/cube.png"));
+        mToolBar.add(Box.createHorizontalGlue()); // pour décaler le bouton "export" à droite
+        addButton("GROUP", new ImageIcon("src/main/java/fr/uga/miage/m1/polygons/gui/images/groups.png"));
+        addButton("EXPORT", new ImageIcon("src/main/java/fr/uga/miage/m1/polygons/gui/images/export.png"));
 
         // Sets the frame initial size
-        setPreferredSize(new Dimension(400, 400));
+        setPreferredSize(new Dimension(720, 480));
+
+        // Création du menu latéral
+        mGroupsMenu = new JPanel();
+        mGroupsMenu.setLayout(new BoxLayout(mGroupsMenu, BoxLayout.Y_AXIS));
+        mGroupsMenu.setBackground(Color.WHITE);
+
+        // Utilisation d'un JSplitPane pour diviser la fenêtre
+        JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
+        splitPane.setLeftComponent(mGroupsMenu);
+        splitPane.setRightComponent(mPanel);
+
+        // Paramètres pour le JSplitPane
+        splitPane.setOneTouchExpandable(true);
+        splitPane.setDividerLocation(150);
+
+        // Ajustement design divider (oui on est des fous)
+        splitPane.setUI(new BasicSplitPaneUI()
+        {
+            @Override
+            public BasicSplitPaneDivider createDefaultDivider()
+            {
+                return new BasicSplitPaneDivider(this)
+                {
+                    public void setBorder(Border b) {}
+
+                    @Override
+                    public void paint(Graphics g)
+                    {
+                        super.paint(g);
+                    }
+                };
+            }
+        });
+
+        splitPane.setBorder(null);
+
+        // Ajout du JSplitPane à la JFrame
+        add(splitPane, BorderLayout.CENTER);
+
     }
 
     /**
@@ -95,9 +152,12 @@ public class JDrawingFrame extends JFrame {
      * @param shape The name of the injected <tt>SimpleShape</tt>.
      * @param icon The icon associated with the injected <tt>SimpleShape</tt>.
      */
-    private void addShape(ShapeFactory.Shapes shape, ImageIcon icon) {
-        JButton button = new JButton(icon);
+    private void addShape(String text, ShapeFactory.Shapes shape, ImageIcon icon) {
+        JButton button = new JButton(text, icon);
         button.setBorderPainted(false);
+        button.setBackground(Color.WHITE);
+        button.setVerticalTextPosition(SwingConstants.BOTTOM);
+        button.setHorizontalTextPosition(SwingConstants.CENTER);
         mButtons.put(shape, button);
         button.setActionCommand(shape.toString());
         button.addActionListener(mReusableActionListener);
@@ -115,8 +175,11 @@ public class JDrawingFrame extends JFrame {
      * @param icon The icon associated with the button.
      */
     private void addButton(String name, ImageIcon icon) {
-        JButton button = new JButton(icon);
+        JButton button = new JButton(name.toLowerCase(),icon);
+        button.setBackground(Color.WHITE);
         button.setBorderPainted(false);
+        button.setVerticalTextPosition(SwingConstants.BOTTOM);
+        button.setHorizontalTextPosition(SwingConstants.CENTER);
         button.setActionCommand(name);
         button.addActionListener(mExportActionListener);
         mToolBar.add(button);
@@ -266,6 +329,76 @@ public class JDrawingFrame extends JFrame {
 
         shp.draw((Graphics2D) mPanel.getGraphics());
         addShapeToTable(shp);
+    }
+
+    public void instantiateGroup(Group group, int x1, int y1, int x2, int y2){
+
+            fillShapes(group, x1, y1, x2, y2);
+
+            cleanGroup(group);
+
+            if(group.getShapes().isEmpty()){
+                return;
+            }
+
+            mGroups.add(group);
+
+            JButton button = new JButton("Group" + (this.mGroups.size()));
+            mGroupsMenu.add(button);
+    }
+
+    public void fillShapes(Group group, int x1, int y1, int x2, int y2) {
+
+        int shpX;
+        int shpY;
+
+        for (SimpleShape shp : this.mShapes) {
+            shpX = shp.getX();
+            shpY = shp.getY();
+
+            if(x1 > x2) {
+                if(shpX >= x2 && shpX <= x1) {
+                    if(y1 > y2) {
+                        if(shpY >= y2 && shpY <= y1) {
+                            group.addShape(shp);
+                        }
+                    } else {
+                        if(shpY >= y1 && shpY <= y2) {
+                            group.addShape(shp);
+                        }
+                    }
+                }
+            } else {
+                if(shpX >= x1 && shpX <= x2) {
+                    if(y1 > y2) {
+                        if(shpY >= y2 && shpY <= y1) {
+                            group.addShape(shp);
+                        }
+                    } else {
+                        if(shpY >= y1 && shpY <= y2) {
+                            group.addShape(shp);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    public void cleanGroup(Group group) {
+
+        List<SimpleShape> groupShapes;
+        List<SimpleShape> shapes = group.getShapes();
+
+        for (SimpleShape shp : shapes) {
+            for (Group grp : mGroups) {
+                groupShapes = grp.getShapes();
+                for (SimpleShape groupShape : groupShapes) {
+                    if (groupShape.equals(shp)) {
+                        group.removeShape(shp);
+                    }
+                }
+            }
+        }
     }
 
     public void drawShape(SimpleShape shape){

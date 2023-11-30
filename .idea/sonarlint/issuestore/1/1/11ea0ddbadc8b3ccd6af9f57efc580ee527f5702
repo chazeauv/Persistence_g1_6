@@ -1,0 +1,9 @@
+
+U
+java:S1854#"8Remove this useless assignment to local variable "mX50".(»±­ß8Å¸ÈÛÀ1
+F
+java:S1481#")Remove this unused "mX50" local variable.(»±­ß8È¸ÈÛÀ1
+N
+java:S1128"1Remove this unused import 'java.awt.BasicStroke'.(À‰Øê8½­ĞÛÀ1
+U
+java:S1128"3Remove this unused import 'java.awt.GradientPaint'.(åÊòÃûÿÿÿÿ8Ò¸ÈÛÀ1

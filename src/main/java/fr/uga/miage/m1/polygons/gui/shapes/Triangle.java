@@ -39,8 +39,7 @@ public class Triangle implements SimpleShape, Visitable {
         int[] ycoords = { mY, mY + 50, mY + 50 };
 
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        GradientPaint gradient = new GradientPaint(mX, mY, Color.GREEN, mX50, mY, Color.WHITE);
-        g2.setPaint(gradient);
+        g2.setColor(new Color(0x00E499));
 
         polygon = new GeneralPath(Path2D.WIND_EVEN_ODD, xcoords.length);
         polygon.moveTo(mX25, mY);
@@ -49,31 +48,34 @@ public class Triangle implements SimpleShape, Visitable {
         }
         polygon.closePath();
         g2.fill(polygon);
-        BasicStroke wideStroke = new BasicStroke(2.0f);
-        g2.setColor(Color.black);
-        g2.setStroke(wideStroke);
         g2.draw(polygon);
+    }
+
+    @Override
+    public int getX() {
+        return this.mX;
+    }
+
+    @Override
+    public int getY() {
+        return this.mY;
+    }
+
+    @Override
+    public void setX(int x) {
+        this.mX = x;
+    }
+
+    @Override
+    public void setY(int y) {
+        this.mY = y;
     }
 
     public void accept(Visitor visitor) {
         visitor.visit(this);
     }
 
-    public int getX() {
-        return mX;
-    }
 
-    public int getY() {
-        return mY;
-    }
-
-    public void setX(int x) {
-        mX = x;
-    }
-
-    public void setY(int y) {
-        mY = y;
-    }
 
     public boolean contains(int x, int y) {
 
