@@ -1,20 +1,13 @@
 import fr.uga.miage.m1.polygons.gui.Client;
 import fr.uga.miage.m1.polygons.gui.JDrawingFrame;
-import fr.uga.miage.m1.polygons.gui.ShapeFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import javax.swing.*;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Scanner;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-public class JDrawingFrameTests {
+class JDrawingFrameTests {
 
     private JDrawingFrame frame;
 
@@ -32,7 +25,7 @@ public class JDrawingFrameTests {
 
     @Test
     @DisplayName("Test sur le titre de la frame")
-    public void testJDrawingFrameTitle() {
+    void testJDrawingFrameTitle() {
         assertEquals("Test", frame.getTitle());
     }
 
