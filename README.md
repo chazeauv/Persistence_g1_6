@@ -25,7 +25,16 @@ L'objectif de ce projet est d'implémenter et d'appliquer les différentes notio
 
 
 ## Utilisation
-Comme mentionné dans la description plus haut, ce programme permet de dessiner des cercles, des carrés et des ronds. Il est par ailleurs possible de les déplacer, les supprimer (Ctrl-Z), d'en faire des groupes, de dessiner un cube (ajout de fonctionnalité au fil des incrémentations).
+Comme mentionné dans la description plus haut, ce programme permet de dessiner des cercles, des carrés, des ronds et des cubes. Il est par ailleurs possible de déplacer les formes, de faire des retours en arrière (Ctrl-Z) ainsi que de faire des groupes (assemblage de plusieurs formes, déplaçable comme une seule et même forme).
+
+#### Utilisation spécifique au groupe
+Descriptif 
+##### Les règles 
+TODO
+
+##### Le fonctionnement
+TODO
+
 
 
 ## Test
