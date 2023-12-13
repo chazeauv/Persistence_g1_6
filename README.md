@@ -2,6 +2,10 @@
 - [Description du projet](#projet-fil-rouge-persistence_g1_6)
 - [Installation](#installation)
 - [Utilisation](#utilisation)
+  - [Utilisation specifique des groupes](#Utilisation-specifique-des-groupes)
+    - [Principe](#Principe)
+    - [Regle](#Regle)
+    - [Fonctionnement](#Fonctionnement)
 - [Conception et réalisation](#Conception-et-realisation)
 - [Documentation](#documentation)
 - [Test](#test)
@@ -10,6 +14,7 @@
 - [Itération 2](#iteration-2)
 - [Itération 3](#iteration-3)
 - [Itération 4](#iteration-4)
+- [Itération 5](#iteration-5)
 
   
 ## Projet fil rouge PERSISTENCE_G1_6
@@ -25,16 +30,31 @@ L'objectif de ce projet est d'implémenter et d'appliquer les différentes notio
 
 
 ## Utilisation
-Comme mentionné dans la description plus haut, ce programme permet de dessiner des cercles, des carrés, des ronds et des cubes. Il est par ailleurs possible de déplacer les formes, de faire des retours en arrière (Ctrl-Z) ainsi que de faire des groupes (assemblage de plusieurs formes, déplaçable comme une seule et même forme).
+Comme mentionné dans la description plus haut, ce programme permet de dessiner des cercles, des carrés, des ronds et des cubes. Il est par ailleurs possible de déplacer les formes, de faire des retours en arrière (Ctrl-Z) ainsi que de faire des groupes (assemblage de plusieurs formes, déplaçable comme une seule et même forme). Il est possible d'exporter l'état du plan de travail au format JSON ou XML ainsi que d'importer un plan de travail au même format.
 
-#### Utilisation spécifique au groupe
-Descriptif 
-##### Les règles 
-TODO
+#### Utilisation specifique des groupes
+##### Principe
+Il est possible de former des groupes de une forme ou plusieurs formes, soit par exemple de définir qu'un triangle et un cercle ne sont qu'une seule est même forme.
 
-##### Le fonctionnement
-TODO
+##### Regles 
+La seule contrainte imposée est qu'un groupe doit être déplaçable de la même manière qu'une forme simple, on a par conséquent choisi nous même le fonctionnement et règle de gestion relative au groupe.
+  1. Une forme peut appartenir au maximum à un groupe, ou minimum à 0.
+  2. Le bouton "group" :
+      - Selectionné : permet de créer les groupes et de déplacer les formes ou les groupes.
+      - Non-selectionné : permet de créer des formes et de les déplacer individuellement. 
+     
+##### Fonctionnement
+Pour créer un groupe :
+  1. Creer des formes.
+  2. Cliquer sur le bouton "group".
+  3. Presser le clic gauche + maintenir + déplacer la souris pour sélectionner pour sélectionner les formes à mettre dans votre groupe (de la même manière que la saisie de plusieurs fichiers sur votre bureau) puis relacher.
+  4. Un bouton "Group N" va apparaître sur le menu gauche.
 
+Pour déplacer un groupe :
+  1. Sélectionner le bouton "group". (A partir de cette étape les groupes son d'ors et déjà déplaçables)
+  1(bis). Le même principe que le drag and drop pour une forme simple est ensuite appliqué.
+  2. Le menu gauche sert uniquement à titre informatif, afin d'identifier facilement quel forme appartient à quel groupe. Les formes du groupe selectionné auront les bords surlignés.
+  
 
 
 ## Test
@@ -129,6 +149,25 @@ Malheureusement, tous les objectifs n'ont pas pu être respectés dans les déla
 - Ajout d'une librairie externe ajoutant une nouvelle forme dessinable (un cube).
 - Le plus rapidement possible.
 - Non-régression des précédentes fonctionnalités.
+- Maintenir un niveau de courverture de test supérieur à 30%.
+
+### Problèmes rencontrés
+
+- Appliquer le même comportement au cube qu'aux autres formes.
+- Non-régression de plus en plus complexe.
+
+### Résultat
+
+La forme a été ajoutée avec succès et dans le temps imparti, elle est conforme avec le reste du projet (suit la même logique et fonctionnement que toutes les autres formes).
+
+## Iteration 5
+
+### Objectifs
+
+- Ajout de la fonctionnalité d'importation au format XML.
+- Composition d'un JAR pour la fonciotnnalité d'eportation au format XML.
+- Non-régression des précédentes fonctionnalités.
+- Maintenir un niveau de courverture de test supérieur à 30%.
 
 ### Problèmes rencontrés
 
