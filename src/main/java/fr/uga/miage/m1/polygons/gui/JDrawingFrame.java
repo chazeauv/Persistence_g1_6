@@ -1,21 +1,27 @@
 package fr.uga.miage.m1.polygons.gui;
 
 import fr.uga.miage.m1.polygons.gui.command.Command;
-import fr.uga.miage.m1.polygons.gui.shapes.Group;
-import fr.uga.miage.m1.polygons.gui.shapes.SimpleShape;
+import fr.uga.miage.m1.polygons.gui.persistence.JSonVisitor;
+import fr.uga.miage.m1.polygons.gui.persistence.Visitor;
+import fr.uga.miage.m1.polygons.gui.persistence.XMLVisitor;
+import fr.uga.miage.m1.polygons.gui.shapes.*;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
 
 import javax.swing.*;
-import javax.swing.border.Border;
-import javax.swing.plaf.basic.BasicSplitPaneDivider;
-import javax.swing.plaf.basic.BasicSplitPaneUI;
+import javax.swing.border.MatteBorder;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.EnumMap;
+import java.io.StringReader;
 import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
@@ -28,11 +34,17 @@ import java.util.logging.Logger;
  */
 public class JDrawingFrame extends JFrame {
 
+    private static final String EXPORT = "EXPORT";
+
+    private static final String IMPORT = "IMPORT";
+
+    private static final String GROUP = "GROUP";
+
+    private boolean modeGroup = false;
+
     private transient SimpleShape shape;
 
-    private transient SimpleShape draggedShape;
-
-    private transient Group draggedGroup;
+    private transient SimpleShape draggedShape = null;
 
     private transient List<SimpleShape> mShapes = new ArrayList<>();
 
@@ -46,7 +58,9 @@ public class JDrawingFrame extends JFrame {
 
     private ShapeFactory.Shapes mSelected;
 
-    private Group mSelectedGroup;
+    private transient Group mSelectedGroup;
+
+    private Map<String, JButton> actionButtons = new HashMap<>();
 
     private JPanel mPanel;
 
@@ -60,7 +74,17 @@ public class JDrawingFrame extends JFrame {
 
     private final transient ActionListener mReusableActionListener = new ShapeActionListener();
 
-    private final transient ActionListener mExportActionListener = new ExportActionListener();
+    private final transient ActionListener mCustomActionListener = new CustomActionListener();
+
+    private final transient ActionListener mGroupsButtonsListener = new GroupsButtonsListener();
+
+    private static final String SQUARE = "square";
+
+    private static final String CIRCLE = "circle";
+
+    private static final String TRIANGLE = "triangle";
+
+    private static final String CUBE = "cube";
 
     /**
      * Tracks buttons to manage the background.
@@ -82,9 +106,13 @@ public class JDrawingFrame extends JFrame {
         mPanel.setBackground(Color.WHITE);
         mPanel.setLayout(null);
         mPanel.setMinimumSize(new Dimension(400, 400));
+        mPanel.setBorder(new MatteBorder(0, 0, 1, 0, new Color(204,204,204)));
         mPanel.addMouseListener(cli);
         mPanel.addMouseMotionListener(cli);
         mLabel = new JLabel(" ", SwingConstants.LEFT);
+        mLabel.setFont(new Font("Arial", Font.PLAIN, 10));
+        mLabel.setOpaque(true);
+        mLabel.setBackground(new Color(234,241,251));
 
         mPanel.setFocusable(true);
         mPanel.requestFocusInWindow();
@@ -92,59 +120,30 @@ public class JDrawingFrame extends JFrame {
         // Fills the panel
         setLayout(new BorderLayout());
         add(mToolBar, BorderLayout.NORTH);
-        add(mPanel, BorderLayout.CENTER);
         add(mLabel, BorderLayout.SOUTH);
+        add(mPanel, BorderLayout.CENTER);
 
         // Add shapes in the menu
-        addShape("square", ShapeFactory.Shapes.SQUARE, new ImageIcon("src/main/java/fr/uga/miage/m1/polygons/gui/images/square.png"));
-        addShape("triangle", ShapeFactory.Shapes.TRIANGLE, new ImageIcon("src/main/java/fr/uga/miage/m1/polygons/gui/images/triangle.png"));
-        addShape("circle", ShapeFactory.Shapes.CIRCLE, new ImageIcon("src/main/java/fr/uga/miage/m1/polygons/gui/images/circle.png"));
-        addShape("cube", ShapeFactory.Shapes.CUBE, new ImageIcon("src/main/java/fr/uga/miage/m1/polygons/gui/images/cube.png"));
+        addShape(SQUARE, ShapeFactory.Shapes.SQUARE, new ImageIcon("src/main/java/fr/uga/miage/m1/polygons/gui/images/square.png"));
+        addShape(TRIANGLE, ShapeFactory.Shapes.TRIANGLE, new ImageIcon("src/main/java/fr/uga/miage/m1/polygons/gui/images/triangle.png"));
+        addShape(CIRCLE, ShapeFactory.Shapes.CIRCLE, new ImageIcon("src/main/java/fr/uga/miage/m1/polygons/gui/images/circle.png"));
+        addShape(CUBE, ShapeFactory.Shapes.CUBE, new ImageIcon("src/main/java/fr/uga/miage/m1/polygons/gui/images/cube.png"));
         mToolBar.add(Box.createHorizontalGlue()); // pour décaler le bouton "export" à droite
-        addButton("GROUP", new ImageIcon("src/main/java/fr/uga/miage/m1/polygons/gui/images/groups.png"));
-        addButton("EXPORT", new ImageIcon("src/main/java/fr/uga/miage/m1/polygons/gui/images/export.png"));
+        addButton(GROUP, new ImageIcon("src/main/java/fr/uga/miage/m1/polygons/gui/images/groups.png"));
+        addButton(EXPORT, new ImageIcon("src/main/java/fr/uga/miage/m1/polygons/gui/images/export.png"));
+        addButton(IMPORT, new ImageIcon("src/main/java/fr/uga/miage/m1/polygons/gui/images/import.png"));
 
         // Sets the frame initial size
         setPreferredSize(new Dimension(720, 480));
 
         // Création du menu latéral
-        mGroupsMenu = new JPanel();
-        mGroupsMenu.setLayout(new BoxLayout(mGroupsMenu, BoxLayout.Y_AXIS));
-        mGroupsMenu.setBackground(Color.WHITE);
+        mGroupsMenu = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+        mGroupsMenu.setBackground(new Color(234,241,251));
+        mGroupsMenu.setPreferredSize(new Dimension(101, 480));
+        mGroupsMenu.setBorder(new MatteBorder(0, 0, 0, 1, new Color(204,204,204)));
 
-        // Utilisation d'un JSplitPane pour diviser la fenêtre
-        JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
-        splitPane.setLeftComponent(mGroupsMenu);
-        splitPane.setRightComponent(mPanel);
-
-        // Paramètres pour le JSplitPane
-        splitPane.setOneTouchExpandable(true);
-        splitPane.setDividerLocation(150);
-
-        // Ajustement design divider (oui on est des fous)
-        splitPane.setUI(new BasicSplitPaneUI()
-        {
-            @Override
-            public BasicSplitPaneDivider createDefaultDivider()
-            {
-                return new BasicSplitPaneDivider(this)
-                {
-                    public void setBorder(Border b) {}
-
-                    @Override
-                    public void paint(Graphics g)
-                    {
-                        super.paint(g);
-                    }
-                };
-            }
-        });
-
-        splitPane.setBorder(null);
-
-        // Ajout du JSplitPane à la JFrame
-        add(splitPane, BorderLayout.CENTER);
-
+        // Ajout du menu latéral à la JFrame
+        add(mGroupsMenu, BorderLayout.WEST);
     }
 
     /**
@@ -180,63 +179,242 @@ public class JDrawingFrame extends JFrame {
         button.setBorderPainted(false);
         button.setVerticalTextPosition(SwingConstants.BOTTOM);
         button.setHorizontalTextPosition(SwingConstants.CENTER);
+        actionButtons.put(name, button);
         button.setActionCommand(name);
-        button.addActionListener(mExportActionListener);
+        button.addActionListener(mCustomActionListener);
         mToolBar.add(button);
         mToolBar.validate();
         repaint();
+    }
+
+
+    public String importAndParse() {
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
+        int returnValue = fileChooser.showOpenDialog(null);
+        if (returnValue == JFileChooser.APPROVE_OPTION) {
+            File selectedFile = fileChooser.getSelectedFile();
+            try {
+                DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+                dbFactory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+                DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+                Document doc = dBuilder.parse(selectedFile);
+                doc.getDocumentElement().normalize();
+                return nodeToString(doc.getDocumentElement());
+            } catch (Exception e) {
+                LogRecord warnRec = new LogRecord(Level.WARNING, "Erreur lors de l'import du fichier");
+                LOGGER.log(warnRec);
+                return null;
+            }
+        } else {
+            return null;
+        }
+    }
+
+    private String nodeToString(Node node) {
+        StringBuilder result = new StringBuilder();
+        if (node.getNodeType() == Node.TEXT_NODE) {
+            result.append(node.getNodeValue());
+        } else if (node.getNodeType() != Node.DOCUMENT_NODE) {
+            result.append("<").append(node.getNodeName());
+            if (node.getAttributes() != null && node.getAttributes().getLength() > 0) {
+                for (int i = 0; i < node.getAttributes().getLength(); i++) {
+                    result.append(" ").append(node.getAttributes().item(i).getNodeName())
+                            .append("=").append("\"")
+                            .append(node.getAttributes().item(i).getNodeValue())
+                            .append("\"");
+                }
+            }
+            result.append(">");
+            NodeList nodeList = node.getChildNodes();
+            for (int i = 0; i < nodeList.getLength(); i++) {
+                Node currentNode = nodeList.item(i);
+                result.append(nodeToString(currentNode));
+            }
+            result.append("</").append(node.getNodeName()).append(">");
+        }
+        return result.toString();
+    }
+
+    private void parseShapes(String xmlString) {
+        List<List<SimpleShape>> groupes = new ArrayList<>();
+        try {
+            Document doc = parseXmlString(xmlString);
+
+            assert doc != null;
+            NodeList shapeNodes = doc.getElementsByTagName("shape");
+            for (int i = 0; i < shapeNodes.getLength(); i++) {
+                Node shapeNode = shapeNodes.item(i);
+                shape = parseShapeNode(shapeNode);
+                if(shape != null) instantiateShape(shape);
+            }
+
+            NodeList groupNodes = doc.getElementsByTagName("group");
+            for (int i = 0; i < groupNodes.getLength(); i++) {
+                Node groupNode = groupNodes.item(i);
+                List<SimpleShape> shapes = parseGroupNode(groupNode);
+                groupes.add(shapes);
+            }
+
+            for (List<SimpleShape> groupe : groupes) {
+                Group g = new Group();
+                for (SimpleShape shp : groupe) {
+                    g.addShape(shp);
+                }
+                instantiateGroup(g);
+            }
+
+        } catch (Exception e) {
+            LogRecord warnRec = new LogRecord(Level.WARNING, "Erreur lors du parsing du fichier");
+            LOGGER.log(warnRec);
+        }
+    }
+
+    private Document parseXmlString(String xmlString) {
+        try{
+            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+            dbFactory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+            Document doc = dBuilder.parse(new InputSource(new StringReader(xmlString)));
+            doc.getDocumentElement().normalize();
+            return doc;
+        } catch (Exception e) {
+            LogRecord warnRec = new LogRecord(Level.WARNING, "Erreur lors du parsing du fichier");
+            LOGGER.log(warnRec);
+            return null;
+        }
+    }
+
+    private SimpleShape parseShapeNode(Node shapeNode) {
+        if (shapeNode.getNodeType() == Node.ELEMENT_NODE) {
+            Element shapeElement = (Element) shapeNode;
+            String type = shapeElement.getElementsByTagName("type").item(0).getTextContent();
+            int x = Integer.parseInt(shapeElement.getElementsByTagName("x").item(0).getTextContent());
+            int y = Integer.parseInt(shapeElement.getElementsByTagName("y").item(0).getTextContent());
+            return ShapeFactory.createShapeFromStr(type, x, y);
+        }
+        return null;
+    }
+
+    private List<SimpleShape> parseGroupNode(Node groupNode) {
+        List<SimpleShape> shapes = new ArrayList<>();
+        SimpleShape existingShape = null;
+        if (groupNode.getNodeType() == Node.ELEMENT_NODE) {
+            Element groupElement = (Element) groupNode;
+            NodeList shapeNodes = groupElement.getElementsByTagName("shape");
+            for (int j = 0; j < shapeNodes.getLength(); j++) {
+                Node shapeNode = shapeNodes.item(j);
+                shape = parseShapeNode(shapeNode);
+                if(shape != null) existingShape = shapeAlreadyExists(shape);
+                if (existingShape != null) {
+                    shapes.add(existingShape);
+                }
+            }
+        }
+        return shapes;
+    }
+
+    private SimpleShape shapeAlreadyExists(SimpleShape shape) {
+        for (SimpleShape s : mShapes) {
+            //compare les coordonnées et le type des shapes
+            if (s.getX() == shape.getX() && s.getY() == shape.getY() && shape.getClass().isAssignableFrom(s.getClass())) {
+                return s;
+            }
+        }
+        return null;
     }
 
     /**
      * Exports the shapes into a file (XML or Json).
      */
     public void export() {
+        String fileType = getFileType();
 
-        String fileType = "";
-        StringBuilder export = new StringBuilder();
-
-        LogRecord warnRec = new LogRecord(Level.WARNING, "Warning");
-
-        // Ouvre une fenêtre pour choisir le type de fichier
-        fileType = javax.swing.JOptionPane.showInputDialog("Quel type de fichier voulez-vous exporter ? (XML ou JSON)");
-
-        if ("json".equalsIgnoreCase(fileType)) {
-            export.append("{\n\"shapes\": [\n");
-
-            for (int i = 0; i < mShapes.size(); i++) {
-                shape = mShapes.get(i);
-                String shapeName = shape.getClass().getSimpleName().toLowerCase();
-                export.append("\t{\n\t\t\"type\": \"" + shapeName + "\",\n\t\t\"x\": " + shape.getX() + ",\n\t\t\"y\": " + shape.getY() + "\n\t}");
-                if (i < mShapes.size() - 1) {
-                    export.append(",\n");
-                }
-            }
-
-            export.append("\n]\n}");
-
-        } else if ("xml".equalsIgnoreCase(fileType)) {
-            export.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<root>\n<shapes>\n");
-
-            for (int i = 0; i < mShapes.size(); i++) {
-                shape = mShapes.get(i);
-                String shapeName = shape.getClass().getSimpleName();
-                export.append("\t<shape>\n\t\t<type>" + shapeName + "</type>\n\t\t<x>" + shape.getX() + "</x>\n\t\t<y>" + shape.getY() + "</y>\n\t</shape>");
-                if (i < mShapes.size() - 1) {
-                    export.append("\n");
-                }
-            }
-
-            export.append("\n</shapes>\n</root>");
-        } else {
-            warnRec.setMessage("Format de fichier non supporté");
-            LOGGER.log(warnRec);
+        if (fileType.isEmpty()) {
+            handleInvalidFileType();
             return;
         }
 
-        // Ouvre une fenêtre pour choisir le nom du fichier
-        String fileName = javax.swing.JOptionPane.showInputDialog("Quel nom voulez-vous donner au fichier ?");
+        StringBuilder export = new StringBuilder();
+        boolean isJSON = fileType.equalsIgnoreCase("json");
 
-        // Ouvre un explorateur de fichier pour choisir le dossier de destination
+        prepareExportHeader(export, isJSON);
+
+        generateShapeRepresentations(export, isJSON);
+
+        saveFile(export, fileType);
+
+        showMessageFileSaved();
+    }
+
+    private String getFileType() {
+        return javax.swing.JOptionPane.showInputDialog("Quel type de fichier voulez-vous exporter ? (XML ou JSON)").toLowerCase();
+    }
+
+    private void handleInvalidFileType() {
+        LogRecord warnRec = new LogRecord(Level.WARNING, "Le type de fichier n'est pas valide");
+        LOGGER.log(warnRec);
+    }
+
+    private void prepareExportHeader(StringBuilder export, boolean isJSON) {
+        if (isJSON) {
+            export.append("{\n\"shapes\": [\n");
+        } else {
+            export.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<shapes>");
+        }
+    }
+
+    private void generateShapeRepresentations(StringBuilder export, boolean isJSON) {
+        List<SimpleShape> shapesAlreadyInVisited = new ArrayList<>();
+
+        //on boucle sur les groupes
+        for (Group group : mGroups) {
+            Visitor visitor = isJSON ? new JSonVisitor() : new XMLVisitor();
+
+            group.accept(visitor);
+
+            export.append(visitor.getRepresentation());
+
+            shapesAlreadyInVisited.addAll(group.getShapes());
+        }
+
+        for (int i = 0; i < mShapes.size(); i++) {
+            SimpleShape shp = mShapes.get(i);
+            Visitor visitor = isJSON ? new JSonVisitor() : new XMLVisitor();
+
+            if(!shapesAlreadyInVisited.contains(shp)) {
+                if (shp instanceof Square) {
+                    Square square = (Square) shp;
+                    square.accept(visitor);
+                } else if (shp instanceof Triangle) {
+                    Triangle triangle = (Triangle) shp;
+                    triangle.accept(visitor);
+                } else if (shp instanceof Circle) {
+                    Circle circle = (Circle) shp;
+                    circle.accept(visitor);
+                } else if (shp instanceof Cube) {
+                    Cube cube = (Cube) shp;
+                    cube.accept(visitor);
+                } else {
+                    LogRecord warnRec = new LogRecord(Level.WARNING, "Shape not found");
+                    LOGGER.log(warnRec);
+                    continue;
+                }
+                export.append(visitor.getRepresentation());
+
+                if (i < mShapes.size() - 1 && shapesAlreadyInVisited.size() < mShapes.size() - 1) {
+                    export.append(isJSON ? ",\n" : "");
+                }
+                shapesAlreadyInVisited.add(shp);
+            }
+        }
+
+
+        export.append(isJSON ? "\n]\n}" : "\n</shapes>");
+    }
+
+    private void saveFile(StringBuilder export, String fileType) {
+        String fileName = javax.swing.JOptionPane.showInputDialog("Quel nom voulez-vous donner au fichier ?");
         javax.swing.JFileChooser fileChooser = new javax.swing.JFileChooser();
         fileChooser.setFileSelectionMode(javax.swing.JFileChooser.DIRECTORIES_ONLY);
         fileChooser.setDialogTitle("Enregistrer le fichier");
@@ -244,21 +422,18 @@ public class JDrawingFrame extends JFrame {
 
         File selectedFile = fileChooser.getSelectedFile();
         String filePath = selectedFile.getAbsolutePath();
-
-        // Créer le fichier
         File file = new File(filePath + "/" + fileName + "." + fileType);
 
-        // Écrit dans le fichier
         try (java.io.PrintWriter output = new java.io.PrintWriter(file)) {
             output.print(export);
         } catch (Exception e) {
-            warnRec.setMessage("Erreur lors de l'écriture du fichier");
+            LogRecord warnRec = new LogRecord(Level.WARNING, "Erreur lors de l'écriture du fichier");
             LOGGER.log(warnRec);
         }
+    }
 
-        //Afficher que le fichier a bien été enregistré
+    private void showMessageFileSaved() {
         javax.swing.JOptionPane.showMessageDialog(null, "Le fichier a bien été enregistré");
-
     }
 
 
@@ -295,6 +470,10 @@ public class JDrawingFrame extends JFrame {
         return command;
     }
 
+    public boolean getModeGroup() {
+        return modeGroup;
+    }
+
     //Setters
     public void setShapes(List<SimpleShape> shapes) {
         this.mShapes = shapes;
@@ -324,6 +503,10 @@ public class JDrawingFrame extends JFrame {
         this.command = command;
     }
 
+    public void setModeGroup(boolean modeGroup) {
+        this.modeGroup = modeGroup;
+    }
+
     //Graphique
     public void instantiateShape(SimpleShape shp){
 
@@ -331,24 +514,59 @@ public class JDrawingFrame extends JFrame {
         addShapeToTable(shp);
     }
 
-    public void instantiateGroup(Group group, int x1, int y1, int x2, int y2){
+    public boolean instantiateGroup(Group group, int x1, int y1, int x2, int y2){
 
             fillShapes(group, x1, y1, x2, y2);
 
             cleanGroup(group);
 
             if(group.getShapes().isEmpty()){
-                return;
+                return false;
             }
 
             mGroups.add(group);
 
-            JButton button = new JButton("Group" + (this.mGroups.size()));
+            int mGroupsSize = mGroups.size();
+
+            JButton button = new JButton("Group" + mGroupsSize);
+            if(mGroupsSize % 2 == 0)
+                button.setBackground(new Color(245, 249, 253));
+            else
+                button.setBackground(Color.WHITE);
+            button.setBorder(new MatteBorder(0, 0, 0, 0, Color.BLACK));
+            button.setPreferredSize(new Dimension(100, 20));
+            button.addActionListener(mGroupsButtonsListener);
             mGroupsMenu.add(button);
+
+            return true;
+    }
+
+    public boolean instantiateGroup(Group group){
+
+            if(group.getShapes().isEmpty()){
+                return false;
+            }
+
+            mGroups.add(group);
+
+            int mGroupsSize = mGroups.size();
+
+            JButton button = new JButton("Group" + mGroupsSize);
+            if(mGroupsSize % 2 == 0)
+                button.setBackground(new Color(245, 249, 253));
+            else
+                button.setBackground(Color.WHITE);
+
+            button.setBorder(new MatteBorder(0, 0, 0, 0, Color.BLACK));
+            button.setPreferredSize(new Dimension(100, 20));
+            button.addActionListener(mGroupsButtonsListener);
+            mGroupsMenu.add(button);
+
+
+            return true;
     }
 
     public void fillShapes(Group group, int x1, int y1, int x2, int y2) {
-
         int shpX;
         int shpY;
 
@@ -356,56 +574,89 @@ public class JDrawingFrame extends JFrame {
             shpX = shp.getX();
             shpY = shp.getY();
 
-            if(x1 > x2) {
-                if(shpX >= x2 && shpX <= x1) {
-                    if(y1 > y2) {
-                        if(shpY >= y2 && shpY <= y1) {
-                            group.addShape(shp);
-                        }
-                    } else {
-                        if(shpY >= y1 && shpY <= y2) {
-                            group.addShape(shp);
-                        }
-                    }
-                }
-            } else {
-                if(shpX >= x1 && shpX <= x2) {
-                    if(y1 > y2) {
-                        if(shpY >= y2 && shpY <= y1) {
-                            group.addShape(shp);
-                        }
-                    } else {
-                        if(shpY >= y1 && shpY <= y2) {
-                            group.addShape(shp);
-                        }
-                    }
-                }
+            if ((x1 > x2 && shpX >= x2 && shpX <= x1)
+                    || (shpX >= x1 && shpX <= x2) && ((y1 > y2 && shpY >= y2 && shpY <= y1)
+                    || (shpY >= y1 && shpY <= y2))) {
+                    group.addShape(shp);
+
             }
         }
     }
+
 
     public void cleanGroup(Group group) {
 
         List<SimpleShape> groupShapes;
-        List<SimpleShape> shapes = group.getShapes();
+        ArrayList<SimpleShape> newShapes = new ArrayList<>(group.getShapes());
 
-        for (SimpleShape shp : shapes) {
+        for (SimpleShape shp : group.getShapes()) {
             for (Group grp : mGroups) {
                 groupShapes = grp.getShapes();
                 for (SimpleShape groupShape : groupShapes) {
                     if (groupShape.equals(shp)) {
-                        group.removeShape(shp);
+                        newShapes.remove(shp);
                     }
                 }
             }
         }
+
+        group.setShapes(newShapes);
     }
 
-    public void drawShape(SimpleShape shape){
-        Graphics2D g2 = (Graphics2D) mPanel.getGraphics();
-        shape.draw(g2);
-        addShapeToTable(shape);
+    public Group isShapeInAGroup(SimpleShape shape) {
+        for (Group grp : mGroups) {
+            for (SimpleShape shp : grp.getShapes()) {
+                if (shp.equals(shape)) {
+                    return grp;
+                }
+            }
+        }
+        return null;
     }
+
+    public boolean isShapeInSelectedGroup(SimpleShape shape, Group group) {
+        if(group != null){
+            for (SimpleShape shp : group.getShapes()) {
+                if (shp.equals(shape)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public boolean moveGroup(Group group, SimpleShape shape, int x, int y) {
+
+        int decalageX =  shape.getX() - x;
+        int decalageY = shape.getY() - y ;
+
+        boolean res = false;
+
+        for (SimpleShape shp : group.getShapes()) {
+            if(!shp.equals(shape)){
+                moveShape(shp, shp.getX() - decalageX, shp.getY() - decalageY);
+                res = true;
+            }
+        }
+
+        moveShape(shape, x, y);
+
+        return res;
+
+    }
+
+    public boolean undoGroup(Group group) {
+
+        if (!mGroups.isEmpty()) {
+            mGroups.remove(group);
+            mGroupsMenu.remove(mGroupsMenu.getComponentCount() - 1);
+            paintComponents(this.getGraphics());
+            return true;
+        }
+
+        return false;
+    }
+
     public void addShapeToTable(SimpleShape shape) {
         this.mShapes.add(shape);
     }
@@ -413,15 +664,6 @@ public class JDrawingFrame extends JFrame {
     public void moveShape(SimpleShape shape, int x, int y) {
         shape.setX(x);
         shape.setY(y);
-        paintComponents(this.getGraphics());
-    }
-
-    //Debug
-    private void showShapes(List<SimpleShape> shapes) {
-        for (SimpleShape shp : shapes) {
-            LogRecord infoShapes = new LogRecord(Level.INFO, shp.getClass().getSimpleName() + " : " + shp.getX() + ", " + shp.getY());
-            LOGGER.log(infoShapes);
-        }
     }
 
     public void undoShape() {
@@ -436,7 +678,11 @@ public class JDrawingFrame extends JFrame {
     public void paintComponents(Graphics g) {
         super.paintComponents(g);
         for (SimpleShape mShape : mShapes) {
-            mShape.draw((Graphics2D) mPanel.getGraphics());
+            if (isShapeInSelectedGroup(mShape, mSelectedGroup) && !(mShape instanceof Cube)) {
+                mShape.drawWithBorder((Graphics2D) mPanel.getGraphics());
+            } else {
+                mShape.draw((Graphics2D) mPanel.getGraphics());
+            }
         }
     }
 
@@ -453,10 +699,10 @@ public class JDrawingFrame extends JFrame {
                 ShapeFactory.Shapes selectedShape = buttonEntry.getKey();
                 JButton btn = mButtons.get(selectedShape);
                 if (evt.getActionCommand().equals(selectedShape.toString())) {
-                    btn.setBorderPainted(true);
+                    btn.setBackground(new Color(194,231,255));
                     mSelected = selectedShape;
                 } else {
-                    btn.setBorderPainted(false);
+                    btn.setBackground(Color.WHITE);
                 }
                 btn.repaint();
             }
@@ -466,13 +712,54 @@ public class JDrawingFrame extends JFrame {
     /**
      * Simple action listener for export button.
      */
-    private class ExportActionListener implements ActionListener {
-
+    private class CustomActionListener implements ActionListener {
         public void actionPerformed(ActionEvent evt) {
-            
-            if(evt.getActionCommand().equals("EXPORT")) {
+
+            JButton btn;
+
+            if (evt.getActionCommand().equals(EXPORT)) {
                 export();
+                btn = actionButtons.get(EXPORT);
+                btn.setBackground(new Color(194, 231, 255));
+            } else if (evt.getActionCommand().equals(GROUP)) {
+                setModeGroup(!getModeGroup());
+                btn = actionButtons.get(GROUP);
+                btn.setBackground(getModeGroup() ? new Color(194, 231, 255) : Color.WHITE);
+            } else if(evt.getActionCommand().equals(IMPORT)) {
+                btn = actionButtons.get(IMPORT);
+                btn.setBackground(new Color(194, 231, 255));
+                parseShapes(importAndParse());
+            } else{
+                btn = actionButtons.get(EXPORT);
+                btn.setBackground(Color.WHITE);
+                btn = actionButtons.get(GROUP);
+                btn.setBackground(Color.WHITE);
+                btn = actionButtons.get(IMPORT);
+                btn.setBackground(Color.WHITE);
             }
+        }
+    }
+
+    private class GroupsButtonsListener implements ActionListener {
+        public void actionPerformed(ActionEvent evt) {
+
+            //On boucle sur les boutons de MGroupsMenu
+            for (Component component: mGroupsMenu.getComponents()) {
+
+                if(component instanceof JButton) {
+                    JButton btn = (JButton) component;
+
+                    if (evt.getActionCommand().equals(btn.getText())) {
+                        component.setBackground(new Color(194,231,255));
+                        mSelectedGroup = mGroups.get(mGroupsMenu.getComponentZOrder(component));
+                        JDrawingFrame.this.paintComponents(JDrawingFrame.this.getGraphics());
+                    } else {
+                        component.setBackground(Color.WHITE);
+                    }
+                }
+            }
+
+
         }
     }
 }

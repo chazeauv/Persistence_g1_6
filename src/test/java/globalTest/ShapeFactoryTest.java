@@ -1,16 +1,16 @@
+package globalTest;
+
 import fr.uga.miage.m1.polygons.gui.ShapeFactory;
-import fr.uga.miage.m1.polygons.gui.shapes.Circle;
-import fr.uga.miage.m1.polygons.gui.shapes.SimpleShape;
-import fr.uga.miage.m1.polygons.gui.shapes.Square;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
 
 import static org.junit.Assert.*;
 
-public class ShapeFactoryTest {
+class ShapeFactoryTest {
     /*@Test
     @DisplayName("Test fonction createShapeFromStr")
-    public void testCreateShapeFromStr() {
+    void testCreateShapeFromStr() {
         //given
         ShapeFactory factory = ShapeFactory.getInstance();
         //when
@@ -23,7 +23,7 @@ public class ShapeFactoryTest {
 
     @Test
     @DisplayName("Test fonction createShapeFromShapes")
-    public void testCreateShapeFromShapes() {
+    void testCreateShapeFromShapes() {
         //given
         ShapeFactory factory = ShapeFactory.getInstance();
         //when
@@ -35,33 +35,33 @@ public class ShapeFactoryTest {
     }*/
 
     @Test
-    public void testCreateShapeFromStr() {
+    void testCreateShapeFromStr() {
         ShapeFactory factory = ShapeFactory.getInstance();
-        assertNotNull(factory.createShapeFromStr("rectangle", 10, 10));
-        assertNotNull(factory.createShapeFromStr("circle", 10, 10));
-        assertNotNull(factory.createShapeFromStr("triangle", 10, 10));
-        assertNotNull(factory.createShapeFromStr("cube", 10, 10));
-        assertNull(factory.createShapeFromStr("unknown", 10, 10));
+        Assertions.assertNotNull(factory.createShapeFromStr("square", 10, 10));
+        Assertions.assertNotNull(factory.createShapeFromStr("circle", 10, 10));
+        Assertions.assertNotNull(factory.createShapeFromStr("triangle", 10, 10));
+        Assertions.assertNotNull(factory.createShapeFromStr("cube", 10, 10));
+        Assertions.assertNull(factory.createShapeFromStr("unknown", 10, 10));
     }
 
     @Test
-    public void testCreateShapeFromShapes() {
+    void testCreateShapeFromShapes() {
         ShapeFactory factory = ShapeFactory.getInstance();
-        assertNotNull(factory.createShapeFromShapes(ShapeFactory.Shapes.SQUARE, 10, 10));
-        assertNotNull(factory.createShapeFromShapes(ShapeFactory.Shapes.CIRCLE, 10, 10));
-        assertNotNull(factory.createShapeFromShapes(ShapeFactory.Shapes.TRIANGLE, 10, 10));
-        assertNotNull(factory.createShapeFromShapes(ShapeFactory.Shapes.CUBE, 10, 10));
+        Assertions.assertNotNull(factory.createShapeFromShapes(ShapeFactory.Shapes.SQUARE, 10, 10));
+        Assertions.assertNotNull(factory.createShapeFromShapes(ShapeFactory.Shapes.CIRCLE, 10, 10));
+        Assertions.assertNotNull(factory.createShapeFromShapes(ShapeFactory.Shapes.TRIANGLE, 10, 10));
+        Assertions.assertNotNull(factory.createShapeFromShapes(ShapeFactory.Shapes.CUBE, 10, 10));
     }
 
     @Test
     @DisplayName("Test fonction getInstance")
-    public void testGetInstance() {
+    void testGetInstance() {
         //given
         ShapeFactory factory = ShapeFactory.getInstance();
         //when
         ShapeFactory factory2 = ShapeFactory.getInstance();
         //then
-        assertSame(factory, factory2);
+        Assertions.assertSame(factory, factory2);
     }
 }
 

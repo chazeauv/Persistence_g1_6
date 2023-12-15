@@ -1,6 +1,7 @@
 package fr.uga.miage.m1.polygons.gui;
 
 import fr.uga.miage.m1.polygons.gui.command.*;
+import fr.uga.miage.m1.polygons.gui.shapes.Group;
 import fr.uga.miage.m1.polygons.gui.shapes.SimpleShape;
 
 import javax.swing.*;
@@ -21,8 +22,10 @@ public class Client implements MouseListener, MouseMotionListener {
             @Override
             public void actionPerformed(ActionEvent e) {
 
-                commandControl.addCommandFromHistory();
-                commandControl.undoCommands();
+                if(commandControl.getCommandsHistory() != null && !commandControl.getCommandsHistory().isEmpty()){
+                    commandControl.addCommandFromHistory();
+                    commandControl.undoCommands();
+                }
             }
         });
     }
@@ -38,27 +41,28 @@ public class Client implements MouseListener, MouseMotionListener {
      * @param evt The associated mouse event.
      */
     public void mouseClicked(MouseEvent evt) {
-        System.out.println("clicked");
-        if(commandControl.getCommands() != null && commandControl.getCommands().size() > 0 && "cgroup".equalsIgnoreCase(commandControl.getLastCommand().getClass().getSimpleName())){
+
+        if(commandControl.getCommands() != null && !commandControl.getCommands().isEmpty() && "cgroup".equalsIgnoreCase(commandControl.getLastCommand().getClass().getSimpleName())){
             commandControl.removeCommand(commandControl.getLastCommand());
         }
 
         int evtX = evt.getX();
         int evtY = evt.getY();
 
-        if (frame.getPanel().contains(evtX, evtY)) {
-            SimpleShape shape = ShapeFactory.getInstance().createShapeFromShapes(frame.getSelected(), evtX, evtY);
+        if (!frame.getModeGroup() && frame.getPanel().contains(evtX, evtY)) {
+            SimpleShape shape = ShapeFactory.createShapeFromShapes(frame.getSelected(), evtX, evtY);
             commandControl.addCommand(new CShape(frame, shape, evtX, evtY));
             commandControl.executeCommands();
         }
     }
+
 
     /**
      * Implements an empty method for the <tt>MouseListener</tt> interface.
      * @param evt The associated mouse event.
      */
     public void mouseEntered(MouseEvent evt) {
-        //TODO
+        //Do nothing
     }
 
     /**
@@ -76,29 +80,27 @@ public class Client implements MouseListener, MouseMotionListener {
      * @param evt The associated mouse event.
      */
     public void mousePressed(MouseEvent evt) {
-        System.out.println("pressed");
+
         if(frame.getPanel().contains(evt.getX(), evt.getY())){
             Point p = new Point(evt.getX(), evt.getY());
             frame.setLastPressed(p);
         }
-
-        boolean shapeFound = false;
 
         if(!frame.getShapes().isEmpty()){
             for(SimpleShape mShape: frame.getShapes()){
                 if(mShape.contains(evt.getX(),evt.getY())){
                     frame.setDraggedShape(mShape);
                     commandControl.addCommand(new DragNDrop(frame, mShape));
-                    shapeFound = true;
                 }
             }
         }
 
-        if(!shapeFound){ //TODO tester si mode = création groupe plutôt que shapeFound
+        if(frame.getModeGroup() && frame.getPanel().contains(evt.getX(), evt.getY()) && frame.getDraggedShape() == null){
+
             int x = evt.getX();
             int y = evt.getY();
 
-            commandControl.addCommand(new CGroup(frame, x, y));
+           commandControl.addCommand(new CGroup(frame, x, y));
         }
     }
 
@@ -108,20 +110,31 @@ public class Client implements MouseListener, MouseMotionListener {
      * @param evt The associated mouse event.
      */
     public void mouseReleased(MouseEvent evt) {
-        System.out.println("released");
-        if(frame.getDraggedShape() != null){
-            commandControl.executeCommands();
-            frame.setDraggedShape(null);
-        }
 
-        if("CGroup".equals(commandControl.getLastCommand().getClass().getSimpleName())){
+        if(frame.getDraggedShape() == null && frame.getModeGroup() && commandControl.getLastCommand() instanceof CGroup){
             CGroup cGroup = (CGroup) commandControl.getLastCommand();
+
             cGroup.setX2(evt.getX());
             cGroup.setY2(evt.getY());
 
             commandControl.executeCommands();
-
         }
+
+        if(frame.getDraggedShape() != null){
+
+            if(frame.getModeGroup() && commandControl.getLastCommand() instanceof DragNDrop){
+                Group grp = frame.isShapeInAGroup(frame.getDraggedShape());
+
+                if(grp != null) {
+                    DragNDrop dragNDrop = (DragNDrop) commandControl.getLastCommand();
+                    dragNDrop.setGroup(grp);
+                }
+            }
+
+            commandControl.executeCommands();
+            frame.setDraggedShape(null);
+        }
+
     }
 
     /**
@@ -154,4 +167,5 @@ public class Client implements MouseListener, MouseMotionListener {
     private void modifyLabel(MouseEvent evt) {
         frame.getLabel().setText("(" + evt.getX() + "," + evt.getY() + ")");
     }
+
 }

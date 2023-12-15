@@ -23,7 +23,6 @@ public class CommandControl {
     public void addCommandFromHistory(){
 
         Command command = getOldCommand();
-
         addCommand(command);
     }
 
@@ -39,6 +38,10 @@ public class CommandControl {
         return commands;
     }
 
+    public List<Command> getCommandsHistory() {
+        return commandsHistory;
+    }
+
     public Command getLastCommand(){
         return commands.get(commands.size()-1);
     }
@@ -52,10 +55,10 @@ public class CommandControl {
         Iterator<Command> iterator = commands.iterator();
         while (iterator.hasNext()) {
             Command command = iterator.next();
-            command.execute();
-            commandsHistory.add(command);
+            if(command.execute()) commandsHistory.add(command);
             iterator.remove();
         }
+
     }
 
     public void undoCommands() {
@@ -68,4 +71,5 @@ public class CommandControl {
             iterator.remove();
         }
     }
+
 }

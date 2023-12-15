@@ -20,10 +20,10 @@ public class ShapeFactory {
         return singleton;
     }
 
-    public SimpleShape createShapeFromStr(String shapeType, int x, int y) {
+    public static SimpleShape createShapeFromStr(String shapeType, int x, int y) {
         SimpleShape shape = null;
         switch (shapeType) {
-            case "rectangle":
+            case "square":
                 shape = new Square(x, y);
                 break;
             case "circle":
@@ -41,7 +41,7 @@ public class ShapeFactory {
         return shape;
     }
 
-    public SimpleShape createShapeFromShapes(Shapes shapeType, int x, int y) {
+    public static SimpleShape createShapeFromShapes(Shapes shapeType, int x, int y) {
         SimpleShape shape = null;
         switch (shapeType) {
             case SQUARE:

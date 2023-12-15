@@ -1,3 +1,5 @@
+package globalTest;
+
 import fr.uga.miage.m1.polygons.gui.Client;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -6,7 +8,6 @@ import org.mockito.Mockito;
 
 import java.awt.event.MouseEvent;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
 class ClientTest {

@@ -1,9 +1,6 @@
 package fr.uga.miage.m1.polygons.gui.persistence;
 
-import fr.uga.miage.m1.polygons.gui.shapes.Circle;
-import fr.uga.miage.m1.polygons.gui.shapes.Cube;
-import fr.uga.miage.m1.polygons.gui.shapes.Square;
-import fr.uga.miage.m1.polygons.gui.shapes.Triangle;
+import fr.uga.miage.m1.polygons.gui.shapes.*;
 
 /**
  * @author <a href="mailto:christophe.saint-marcel@univ-grenoble-alpes.fr">Christophe</a>
@@ -37,6 +34,38 @@ public class JSonVisitor implements Visitor {
         this.representation = "{\n\t\t\"type\": \"cube\",\n\t\t\"x\": " + cube.getX() + XY + cube.getY() + NT;
     }
 
+    @Override
+    public void visit(Group group) {
+        String shapeType = null;
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("{\n\t\"group\": [");
+
+        for (SimpleShape shape : group.getShapes()) {
+            shapeType = shape.getClass().getSimpleName().toLowerCase();
+
+            switch(shapeType) {
+                case "circle":
+                    sb.append("\n\t\t{\n\t\t\t\"type\": \"circle\",\n\t\t\t\"x\": ").append(shape.getX()).append(XY).append(shape.getY()).append(NT);
+                    break;
+                case "square":
+                    sb.append("\n\t\t{\n\t\t\t\"type\": \"square\",\n\t\t\t\"x\": ").append(shape.getX()).append(XY).append(shape.getY()).append(NT);
+                    break;
+                case "triangle":
+                    sb.append("\n\t\t{\n\t\t\t\"type\": \"triangle\",\n\t\t\t\"x\": ").append(shape.getX()).append(XY).append(shape.getY()).append(NT);
+                    break;
+                case "cube":
+                    sb.append("\n\t\t{\n\t\t\t\"type\": \"cube\",\n\t\t\t\"x\": ").append(shape.getX()).append(XY).append(shape.getY()).append(NT);
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        sb.append("\n\t]\n}");
+        this.representation = sb.toString();
+    }
+
     /**
      * @return the representation in JSon example for a Circle
      *
@@ -52,6 +81,8 @@ public class JSonVisitor implements Visitor {
      * }
      *         </pre>
      */
+
+    @Override
     public String getRepresentation() {
         return representation;
     }

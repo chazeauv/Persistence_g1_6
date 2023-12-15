@@ -10,11 +10,9 @@ import java.awt.Graphics2D;
  */
 public interface SimpleShape {
 
-    /**
-     * Method to draw the shape of the extension.
-     * @param g2 The graphics object used for painting.
-     */
     void draw(Graphics2D g2);
+
+    void drawWithBorder(Graphics2D g2);
 
     int getX();
 
