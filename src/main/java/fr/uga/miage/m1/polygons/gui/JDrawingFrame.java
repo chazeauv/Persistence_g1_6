@@ -449,13 +449,11 @@ public class JDrawingFrame extends JFrame {
 
             if (evt.getActionCommand().equals(EXPORT)) {
                 Export.export(mShapes, mGroups);
-                btn = actionButtons.get(EXPORT);
             } else if (evt.getActionCommand().equals(GROUP)) {
                 setModeGroup(!getModeGroup());
                 btn = actionButtons.get(GROUP);
                 btn.setBackground(getModeGroup() ? new Color(194, 231, 255) : Color.WHITE);
             } else if(evt.getActionCommand().equals(IMPORT)) {
-                btn = actionButtons.get(IMPORT);
                 ImportXML.parseShapes(ImportXML.importXML(), mShapes, JDrawingFrame.this);
             } else{
                 btn = actionButtons.get(EXPORT);

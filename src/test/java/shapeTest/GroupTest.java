@@ -96,7 +96,7 @@ class GroupTest {
             coords[shapes.indexOf(shape)][1] = shape.getY25();
         }
 
-        String expectedRepresentation = "{\n\t\"group\": [\n\t\t{\n\t\t\t\"type\": \"circle\",\n\t\t\t\"x\": " + coords[0][0] + ",\n\t\t\"y\": " + coords[0][1] + "\n\t}\n\t\t{\n\t\t\t\"type\": \"square\",\n\t\t\t\"x\": " + coords[1][0] + ",\n\t\t\"y\": " + coords[1][1] + "\n\t}\n\t]\n}";
+        String expectedRepresentation = "{\n\t\"group\": [\n\t\t{\n\t\t\"type\": \"circle\",\n\t\t\"x\": " + coords[0][0] + ",\n\t\t\"y\": " + coords[0][1] + "\n\t\t}\n\t\t{\n\t\t\"type\": \"square\",\n\t\t\"x\": " + coords[1][0] + ",\n\t\t\"y\": " + coords[1][1] + "\n\t\t}\n\t]\n}";
         assertEquals(expectedRepresentation, visitor.getRepresentation());
     }
 
