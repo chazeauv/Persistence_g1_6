@@ -18,8 +18,8 @@
 - [Itération 5](#iteration-5)
 
   
-# Projet fil rouge PERSISTENCE_G1_6
-
+# <span style="color: blue;">Projet fil rouge PERSISTENCE_G1_6</span>
+<span style="color: blue;">Projet fil rouge PERSISTENCE_G1_6</span>
 L'objectif de ce projet est d'implémenter et d'appliquer les différentes notions vues en cours de Patron et Composant. Celui-ci a pour base une frame où l'on peut y disposer des cercles, des carrés et des rectangles. Au fil de chaque itération, il est demandé d'ajouter de nouvelles fonctionnalités, mettre en place différents patrons (patron Composite, Visiteur, ...), d'utiliser Java/Maven/Sonar mais aussi d'avoir une couverture de test d'au moins 30%. Par ailleurs, afin d'éviter une redondance d'information entre moodle et le README, un dossier spécifique dans ce git contraindra nos différents diagrammes au fur et à mesure des incrémentations.
 
 
