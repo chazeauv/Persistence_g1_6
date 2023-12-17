@@ -58,8 +58,6 @@ public class JDrawingFrame extends JFrame {
 
     private Point mLastPressed;
 
-    private static final Logger LOGGER = Logger.getLogger(JDrawingFrame.class.getName());
-
     private transient Command command;
 
     private final transient ActionListener mReusableActionListener = new ShapeActionListener();
