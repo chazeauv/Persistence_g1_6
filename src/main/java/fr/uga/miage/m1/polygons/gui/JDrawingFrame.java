@@ -1,33 +1,19 @@
 package fr.uga.miage.m1.polygons.gui;
 
 import fr.uga.miage.m1.polygons.gui.command.Command;
-import fr.uga.miage.m1.polygons.gui.persistence.JSonVisitor;
-import fr.uga.miage.m1.polygons.gui.persistence.Visitor;
-import fr.uga.miage.m1.polygons.gui.persistence.XMLVisitor;
-import fr.uga.miage.m1.polygons.gui.shapes.*;
+import fr.uga.miage.m1.polygons.gui.shapes.Cube;
+import fr.uga.miage.m1.polygons.gui.shapes.Group;
+import fr.uga.miage.m1.polygons.gui.shapes.SimpleShape;
 import importExport.Export;
 import importExport.ImportXML;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.InputSource;
 
 import javax.swing.*;
 import javax.swing.border.MatteBorder;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.StringReader;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 
 /**
