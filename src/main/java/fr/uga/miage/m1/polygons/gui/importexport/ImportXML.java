@@ -23,7 +23,9 @@ import java.util.logging.Logger;
 
 public class ImportXML {
 
-    private static final Logger LOGGER = Logger.getLogger(JDrawingFrame.class.getName());
+    private ImportXML(){}
+
+    private static final Logger LOGGER = Logger.getLogger(ImportXML.class.getName());
     static SimpleShape shape;
 
     public static String importXML() {

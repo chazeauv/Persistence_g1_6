@@ -17,7 +17,9 @@ import java.util.logging.Logger;
 
 public class Export {
 
-    private static final Logger LOGGER = Logger.getLogger(JDrawingFrame.class.getName());
+    private Export(){}
+
+    private static final Logger LOGGER = Logger.getLogger(Export.class.getName());
 
     public static void export(List<SimpleShape> mShps, List<Group> mGrps) {
         String fileType = getFileType();

@@ -71,3 +71,5 @@ z
 Jsrc/main/java/fr/uga/miage/m1/polygons/gui/shapes/AbstractSimpleShape.java,b\2\b20166b46afa41775ce3ce09755c91ac91688088
 V
 &src/main/java/importExport/Export.java,e\5\e5d2da228fa969e039024fa064403eb5639ac611
+Y
+)src/main/java/importExport/ImportXML.java,e\5\e55ab12500ae7cdb4f3388ebbe5c2b3e263f408c
