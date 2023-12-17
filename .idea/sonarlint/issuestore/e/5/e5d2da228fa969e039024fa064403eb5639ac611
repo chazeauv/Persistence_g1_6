@@ -1,6 +1,4 @@
 
 t	java:S120"ZRename this package name to match the regular expression '^[a-z_]+(\.[a-z_][a-z0-9_]*)*$'.(¨‡ûéýÿÿÿÿ
->
-java:S3416")Update this logger to use "Export.class".(Â½“+
-P
-java:S1118":Add a private constructor to hide the implicit public one.(‘²á„
+i
+java:S1128"GRemove this unused import 'fr.uga.miage.m1.polygons.gui.JDrawingFrame'.(¹™É‹þÿÿÿÿ8¸èÄÌÇ1
