@@ -40,7 +40,8 @@ public class Export {
     }
 
     private static String getFileType() {
-        return javax.swing.JOptionPane.showInputDialog("Quel type de fichier voulez-vous exporter ? (XML ou JSON)").toLowerCase();
+        String result = javax.swing.JOptionPane.showInputDialog("Quel type de fichier voulez-vous exporter ? (XML ou JSON)");
+        return result != null ? result.toLowerCase() : "";
     }
 
     private static void handleInvalidFileType() {

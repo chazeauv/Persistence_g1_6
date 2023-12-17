@@ -84,6 +84,11 @@ public class ImportXML {
             for (int i = 0; i < shapeNodes.getLength(); i++) {
                 Node shapeNode = shapeNodes.item(i);
                 shape = parseShapeNode(shapeNode);
+
+
+                /* ATTENTION ____________________________________________________________________
+                 * Changer l'appel d'instantiateShape par vos fonctions d'instanciation du shape
+                 */
                 if(shape != null) frame.instantiateShape(shape);
             }
 
@@ -99,6 +104,10 @@ public class ImportXML {
                 for (SimpleShape shp : groupe) {
                     g.addShape(shp);
                 }
+
+                /* ATTENTION ____________________________________________________________________
+                 * Changer l'appel d'instantiateGroup par vos fonctions d'instanciation du group
+                 */
                 frame.instantiateGroup(g);
             }
 

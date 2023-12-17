@@ -10,6 +10,7 @@ public class JSonVisitor implements Visitor {
     private String representation = null;
     static final String XY = ",\n\t\t\"y\": ";
     static final String NT = "\n\t}";
+    static final String NT2 = "\n\t\t}";
 
     @Override
     public void visit(Circle circle) {
@@ -46,16 +47,16 @@ public class JSonVisitor implements Visitor {
 
             switch(shapeType) {
                 case "circle":
-                    sb.append("\n\t\t{\n\t\t\t\"type\": \"circle\",\n\t\t\t\"x\": ").append(shape.getX25()).append(XY).append(shape.getY25()).append(NT);
+                    sb.append("\n\t\t{\n\t\t\"type\": \"circle\",\n\t\t\"x\": ").append(shape.getX25()).append(XY).append(shape.getY25()).append(NT2);
                     break;
                 case "square":
-                    sb.append("\n\t\t{\n\t\t\t\"type\": \"square\",\n\t\t\t\"x\": ").append(shape.getX25()).append(XY).append(shape.getY25()).append(NT);
+                    sb.append("\n\t\t{\n\t\t\"type\": \"square\",\n\t\t\"x\": ").append(shape.getX25()).append(XY).append(shape.getY25()).append(NT2);
                     break;
                 case "triangle":
-                    sb.append("\n\t\t{\n\t\t\t\"type\": \"triangle\",\n\t\t\t\"x\": ").append(shape.getX25()).append(XY).append(shape.getY25()).append(NT);
+                    sb.append("\n\t\t{\n\t\t\"type\": \"triangle\",\n\t\t\"x\": ").append(shape.getX25()).append(XY).append(shape.getY25()).append(NT2);
                     break;
                 case "cube":
-                    sb.append("\n\t\t{\n\t\t\t\"type\": \"cube\",\n\t\t\t\"x\": ").append(shape.getX25()).append(XY).append(shape.getY25()).append(NT);
+                    sb.append("\n\t\t{\n\t\t\"type\": \"cube\",\n\t\t\"x\": ").append(shape.getX25()).append(XY).append(shape.getY25()).append(NT2);
                     break;
                 default:
                     break;

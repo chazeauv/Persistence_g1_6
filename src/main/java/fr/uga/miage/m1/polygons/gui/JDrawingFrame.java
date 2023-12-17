@@ -450,14 +450,12 @@ public class JDrawingFrame extends JFrame {
             if (evt.getActionCommand().equals(EXPORT)) {
                 Export.export(mShapes, mGroups);
                 btn = actionButtons.get(EXPORT);
-                btn.setBackground(new Color(194, 231, 255));
             } else if (evt.getActionCommand().equals(GROUP)) {
                 setModeGroup(!getModeGroup());
                 btn = actionButtons.get(GROUP);
                 btn.setBackground(getModeGroup() ? new Color(194, 231, 255) : Color.WHITE);
             } else if(evt.getActionCommand().equals(IMPORT)) {
                 btn = actionButtons.get(IMPORT);
-                btn.setBackground(new Color(194, 231, 255));
                 ImportXML.parseShapes(ImportXML.importXML(), mShapes, JDrawingFrame.this);
             } else{
                 btn = actionButtons.get(EXPORT);
@@ -468,94 +466,6 @@ public class JDrawingFrame extends JFrame {
                 btn.setBackground(Color.WHITE);
             }
         }
-
-        /*private void parseShapes(String xmlString) {
-            List<List<SimpleShape>> groupes = new ArrayList<>();
-            try {
-                Document doc = parseXmlString(xmlString);
-
-                assert doc != null;
-                NodeList shapeNodes = doc.getElementsByTagName("shape");
-                for (int i = 0; i < shapeNodes.getLength(); i++) {
-                    Node shapeNode = shapeNodes.item(i);
-                    shape = parseShapeNode(shapeNode);
-                    if(shape != null) instantiateShape(shape);
-                }
-
-                NodeList groupNodes = doc.getElementsByTagName("group");
-                for (int i = 0; i < groupNodes.getLength(); i++) {
-                    Node groupNode = groupNodes.item(i);
-                    List<SimpleShape> shapes = parseGroupNode(groupNode);
-                    groupes.add(shapes);
-                }
-
-                for (List<SimpleShape> groupe : groupes) {
-                    Group g = new Group();
-                    for (SimpleShape shp : groupe) {
-                        g.addShape(shp);
-                    }
-                    instantiateGroup(g);
-                }
-
-            } catch (Exception e) {
-                LogRecord warnRec = new LogRecord(Level.WARNING, "Erreur lors du parsing du fichier");
-                LOGGER.log(warnRec);
-            }
-        }
-
-        private List<SimpleShape> parseGroupNode(Node groupNode) {
-            List<SimpleShape> shapes = new ArrayList<>();
-            SimpleShape existingShape = null;
-            if (groupNode.getNodeType() == Node.ELEMENT_NODE) {
-                Element groupElement = (Element) groupNode;
-                NodeList shapeNodes = groupElement.getElementsByTagName("shape");
-                for (int j = 0; j < shapeNodes.getLength(); j++) {
-                    Node shapeNode = shapeNodes.item(j);
-                    shape = parseShapeNode(shapeNode);
-                    if(shape != null) existingShape = shapeAlreadyExists(shape, mShapes);
-                    if (existingShape != null) {
-                        shapes.add(existingShape);
-                    }
-                }
-            }
-            return shapes;
-        }
-
-        private SimpleShape parseShapeNode(Node shapeNode) {
-            if (shapeNode.getNodeType() == Node.ELEMENT_NODE) {
-                Element shapeElement = (Element) shapeNode;
-                String type = shapeElement.getElementsByTagName("type").item(0).getTextContent();
-                int x = Integer.parseInt(shapeElement.getElementsByTagName("x").item(0).getTextContent());
-                int y = Integer.parseInt(shapeElement.getElementsByTagName("y").item(0).getTextContent());
-                return ShapeFactory.createShapeFromStr(type, x, y);
-            }
-            return null;
-        }
-
-        private Document parseXmlString(String xmlString) {
-            try{
-                DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-                dbFactory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
-                DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-                Document doc = dBuilder.parse(new InputSource(new StringReader(xmlString)));
-                doc.getDocumentElement().normalize();
-                return doc;
-            } catch (Exception e) {
-                LogRecord warnRec = new LogRecord(Level.WARNING, "Erreur lors du parsing du fichier");
-                LOGGER.log(warnRec);
-                return null;
-            }
-        }
-
-        private SimpleShape shapeAlreadyExists(SimpleShape shape, List<SimpleShape> mShps) {
-            for (SimpleShape s : mShps) {
-                //compare les coordonnées et le type des shapes
-                if (s.getX() == shape.getX() && s.getY() == shape.getY() && shape.getClass().isAssignableFrom(s.getClass())) {
-                    return s;
-                }
-            }
-            return null;
-        }*/
     }
 
     private class GroupsButtonsListener implements ActionListener {
