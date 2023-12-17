@@ -47,8 +47,9 @@ La seule contrainte imposée est qu'un groupe doit être déplaçable de la mêm
 Pour créer un groupe :
   1. Créer des formes.
   2. Cliquer sur le bouton "group".
-  3. Maintenir le clic gauche + déplacer la souris pour sélectionner les formes à mettre dans votre groupe (de la même manière que la sélection de plusieurs fichiers sur votre bureau), puis relâcher.
+  3. Maintenir le clic gauche + déplacer la souris pour sélectionner les formes à mettre dans votre groupe (de la même manière que la sélection de plusieurs fichiers sur votre bureau), puis relâcher. 
   4. Un bouton "Group X" va apparaître dans le menu gauche, avec pour X le numéro associé au groupe créé.
+        /!\ WARNING : SI LE BOUTON "Group X" N'APPARAIT PAS, DEPLACER LA SOURIS DANS LE PLAN DE TRAVAIL (ACTUALISE LE PANEL).
 
 Pour déplacer un groupe :
   1. Sélectionner le bouton "group". (À partir de cette étape, les groupes sont déjà déplaçables). Le même principe que le drag and drop pour une forme simple est ensuite appliqué.
@@ -167,7 +168,7 @@ La forme a été ajoutée avec succès et dans le temps imparti, elle est confor
 ## Objectifs
 
 - Ajout de la fonctionnalité d'importation au format XML.
-- Composition d'un JAR pour la fonctionnalité d'exportation au format XML.
+- Composition d'un JAR pour la fonctionnalité d'importation au format XML.
 - Non-régression des précédentes fonctionnalités.
 - Maintenir un niveau de couverture des tests supérieur à 30%.
 - Finir l'implémentation complète de la fonctionnalité de création de groupe et du drag and drop associé (rattraper le retard pris lors de la fin de l'itération 3).
@@ -175,8 +176,11 @@ La forme a été ajoutée avec succès et dans le temps imparti, elle est confor
 ## Problèmes rencontrés
 
 - Lecture d'un fichier au format XML (réutilisation des notions vues en L3 pour le cours de XML avec les notions de Document, Node, NodeList, ChildNode, ...).
-- Lien entre la frame et les formes importées.
+- Création des liens entre la frame/panel et les formes importées.
 - Non-régression de plus en plus complexe, maintenir la fonctionnalité de drag and drop.
+- Création du JAR de la fonctionnalité d'importation au format XML et vérification de sa bonne intégration dans un projet vierge (soit sans cette fonctionnalité au préalable).
+
+## 
 
 ## Résultat
 
