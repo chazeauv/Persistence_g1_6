@@ -6,6 +6,7 @@
     - [Principe](#Principe)
     - [Regle](#Regle)
     - [Fonctionnement](#Fonctionnement)
+  - [Installation de la fonctionnalité d'importation](#Installation-de-la-fonctionnalité-d'importation)
 - [Conception et réalisation](#Conception-et-realisation)
 - [Documentation](#documentation)
 - [Test](#test)
@@ -56,7 +57,20 @@ Pour déplacer un groupe :
 
 Information complémentaire : 
 Le menu gauche sert uniquement à titre informatif, afin d'identifier facilement quelle forme appartient à quel groupe. Les formes du groupe sélectionné auront les bords surlignés.
-  
+
+## Installation de la fonctionnalité d'importation
+Dans le cas où vous souhaitez utiliser cette fonctionnalité dans votre projet, récupérez le JAR Persistence_g1_6.jar ici, importez-le dans votre dossier lib et suivez les étapes ci-dessous. Sinon, il vous suffit de suivre les étapes ci-contre pour utiliser cette fonctionnalité dans notre projet.
+
+  1. Le fichier Persistence_g1_6.jar est déjà présent dans le dossier lib.
+  2. Ajoutez cette dépendance dans le fichier pom.xml :
+      `<dependency><groupId>edu.uga.miage.m1</groupId><artifactId>Persistence_g1_6</artifactId><version>1.0</version></dependency>`
+  3. Tapez la commande suivante dans l’invite de commande de votre projet : `mvn install:install-file -Dfile="lib/Persistence_g1_6.jar" -DgroupId="edu.uga.miage.m1" -DartifactId="Persistence_g1_6" -Dversion="1.0" -Dpackaging=jar -DgeneratePom=true`
+  4. Faites un mvn clean install.
+  4.(bis) Si une nouvelle bibliothèque n’est pas ajoutée dans “Libraries Externes”, il faut redémarrer l’IDE (cas repéré sur Intelliji).
+  5. Enfin, chaque groupe n’ayant pas forcément la même implémentation et instantiation des formes et groupes de forme, une partie est à compléter de façon à s’intégrer avec votre façon de faire durant le projet. (Voir les commentaires dans la classe ImportXML (lignes 89 et 108) et l’implémentation des deux méthodes suivantes : instanciateShape et instanciateGroup).
+  5.(bis) Si vous utilisez notre projet, ces deux dernières fonctions sont déjà implémentées et fonctionnelles.
+
+
 
 # Test
 Pour visualiser la couverture de test, il faut au préalable être connecté au VPN de l'UGA (ou physiquement sur un ordinateur de l'UGA) :
@@ -178,11 +192,10 @@ La forme a été ajoutée avec succès et dans le temps imparti, elle est confor
 - Lecture d'un fichier au format XML (réutilisation des notions vues en L3 pour le cours de XML avec les notions de Document, Node, NodeList, ChildNode, ...).
 - Création des liens entre la frame/panel et les formes importées.
 - Non-régression de plus en plus complexe, maintenir la fonctionnalité de drag and drop.
-- Création du JAR de la fonctionnalité d'importation au format XML et vérification de sa bonne intégration dans un projet vierge (soit sans cette fonctionnalité au préalable).
+- Création du JAR de la fonctionnalité d'importation au format XML et vérification de sa bonne intégration dans un projet vierge (soit un projet sans cette fonctionnalité).
 
-## 
 
 ## Résultat
 
-Dans un premier temps, la fonctionnalité de création de groupe a été implémentée et testée de façon à partir sur une nouvelle base saine pour cette itération. L'importation d'un plan de travail au format XML a été réalisée avec succès, la qualité première attendue est respectée. Par ailleurs, des garde-fous ont été implémentés de façon à ce qu'un fichier XML ne soit validé et affiché sur l'écran à la seule condition que le format XML soit respecté (chaque balise ouvrante a sa balise fermante et inversement, etc...). Pour des raisons de temps, aucune réponse n'est remontée à l'utilisateur (soit l'interface) s'il tente d'importer un fichier identifié comme non conforme (ne faisant d'ailleurs pas partie des attentes de l'itération, mais est un ajout que l'on aurait aimé ajouter pour améliorer l'expérience utilisateur).
-En ce qui concerne le fichier JAR,
+Dans un premier temps, la fonctionnalité de création de groupe a été implémentée et testée de façon à partir sur une nouvelle base saine pour cette itération. L'importation d'un plan de travail au format XML a été réalisée avec succès, la qualité première attendue est respectée. Pour des raisons de temps, aucune réponse n'est remontée à l'utilisateur (soit par l'interface) s'il tente d'importer un fichier identifié comme non conforme (ne faisant d'ailleurs pas partie des attentes de l'itération, mais est un ajout que l'on aurait aimé ajouter pour améliorer l'expérience utilisateur).
+En ce qui concerne le fichier JAR, il nous a fallu déplacer toutes les fonctions dans les classes correspondantes (ImportXML et Export), créer le JAR et copier le même système que celui vu lors de l'utilisation du JAR et de la classe Cube vue en cours. Ensuite, nous avons recréé le projet "vierge" (sans la fonction d'importation), puis importé le JAR en suivant la procédure [(ci-contre)](#Installation-de-la-fonctionnalité-d'importation) et vérifié que le code était fonctionnel à travers différents cas d'utilisation.
