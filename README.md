@@ -65,9 +65,9 @@ Dans le cas où vous souhaitez utiliser cette fonctionnalité dans votre projet,
       `<dependency><groupId>edu.uga.miage.m1</groupId><artifactId>Persistence_g1_6</artifactId><version>1.0</version></dependency>`
   3. Tapez la commande suivante dans l’invite de commande de votre projet : `mvn install:install-file -Dfile="lib/Persistence_g1_6.jar" -DgroupId="edu.uga.miage.m1" -DartifactId="Persistence_g1_6" -Dversion="1.0" -Dpackaging=jar -DgeneratePom=true`
   4. Faites un mvn clean install.
-  4.(bis) Si une nouvelle bibliothèque n’est pas ajoutée dans “Libraries Externes”, il faut redémarrer l’IDE (cas repéré sur Intelliji).
+  4. (bis) Si une nouvelle bibliothèque n’est pas ajoutée dans “Libraries Externes”, il faut redémarrer l’IDE (cas repéré sur Intelliji).
   5. Enfin, chaque groupe n’ayant pas forcément la même implémentation et instantiation des formes et groupes de forme, une partie est à compléter de façon à s’intégrer avec votre façon de faire durant le projet. (Voir les commentaires dans la classe ImportXML (lignes 89 et 108) et l’implémentation des deux méthodes suivantes : instanciateShape et instanciateGroup).
-  5.(bis) Si vous utilisez notre projet, ces deux dernières fonctions sont déjà implémentées et fonctionnelles.
+  5. (bis) Si vous utilisez notre projet, ces deux dernières fonctions sont déjà implémentées et fonctionnelles.
 
 
 
