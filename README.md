@@ -4,9 +4,9 @@
 - [Utilisation](#utilisation)
   - [Utilisation specifique des groupes](#Utilisation-specifique-des-groupes)
     - [Principe](#Principe)
-    - [Regle](#Regle)
+    - [Regles](#Regles)
     - [Fonctionnement](#Fonctionnement)
-  - [Installation de la fonctionnalité d'importation](#Installation-de-la-fonctionnalité-d'importation)
+  - [Installation de la fonctionnalité d'importation](#Installation-de-la-fonctionnalite-d'importation)
 - [Conception et réalisation](#Conception-et-realisation)
 - [Documentation](#documentation)
 - [Test](#test)
@@ -58,7 +58,7 @@ Pour déplacer un groupe :
 Information complémentaire : 
 Le menu gauche sert uniquement à titre informatif, afin d'identifier facilement quelle forme appartient à quel groupe. Les formes du groupe sélectionné auront les bords surlignés.
 
-## Installation de la fonctionnalité d'importation
+## Installation de la fonctionnalite d'importation
 Dans le cas où vous souhaitez utiliser cette fonctionnalité dans votre projet, récupérez le JAR Persistence_g1_6.jar ici, importez-le dans votre dossier lib et suivez les étapes ci-dessous. Sinon, il vous suffit de suivre les étapes ci-contre pour utiliser cette fonctionnalité dans notre projet.
 
   1. Le fichier Persistence_g1_6.jar est déjà présent dans le dossier lib.
