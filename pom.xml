@@ -31,6 +31,11 @@
             <version>1.0.1</version>
         </dependency>
         <dependency>
+            <groupId>edu.uga.miage.m1</groupId>
+            <artifactId>Persistence_g1_6</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
             <version>5.6.0</version>

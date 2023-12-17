@@ -13,7 +13,6 @@ import org.xml.sax.InputSource;
 import javax.swing.*;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import java.awt.*;
 import java.io.File;
 import java.io.StringReader;
 import java.util.ArrayList;

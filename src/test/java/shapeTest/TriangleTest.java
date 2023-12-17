@@ -27,7 +27,7 @@ class TriangleTest {
         //when
         triangle.accept(xmlVisitor);
         //then
-        assertEquals("<shape><type>triangle</type><x>"+triangle.getX()+"</x><y>"+triangle.getX()+"</y></shape>", xmlVisitor.getRepresentation());
+        assertEquals("<shape><type>triangle</type><x>"+triangle.getX25()+"</x><y>"+triangle.getY25()+"</y></shape>", xmlVisitor.getRepresentation());
     }
 
     @Test
@@ -43,7 +43,7 @@ class TriangleTest {
         //when
         triangle.accept(jsonVisitor);
         //then
-        assertEquals("{\n\t\t\"type\": \"triangle\",\n\t\t\"x\": " + triangle.getX() + XY + triangle.getY() + NT, jsonVisitor.getRepresentation());
+        assertEquals("{\n\t\t\"type\": \"triangle\",\n\t\t\"x\": " + triangle.getX25() + XY + triangle.getY25() + NT, jsonVisitor.getRepresentation());
     }
 
     @Mock

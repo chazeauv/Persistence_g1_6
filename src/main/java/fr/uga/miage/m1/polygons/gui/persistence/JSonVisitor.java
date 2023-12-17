@@ -14,24 +14,24 @@ public class JSonVisitor implements Visitor {
     @Override
     public void visit(Circle circle) {
         
-        this.representation = "{\n\t\t\"type\": \"circle\",\n\t\t\"x\": " + circle.getX() + XY + circle.getY() + NT;
+        this.representation = "{\n\t\t\"type\": \"circle\",\n\t\t\"x\": " + circle.getX25() + XY + circle.getY25() + NT;
     }
 
     @Override
     public void visit(Square square) {
 
-        this.representation = "{\n\t\t\"type\": \"square\",\n\t\t\"x\": " + square.getX() + XY + square.getY() + NT;
+        this.representation = "{\n\t\t\"type\": \"square\",\n\t\t\"x\": " + square.getX25() + XY + square.getY25() + NT;
     }
 
     @Override
     public void visit(Triangle triangle) {
 
-        this.representation = "{\n\t\t\"type\": \"triangle\",\n\t\t\"x\": " + triangle.getX() + XY + triangle.getY() + NT;
+        this.representation = "{\n\t\t\"type\": \"triangle\",\n\t\t\"x\": " + triangle.getX25() + XY + triangle.getY25() + NT;
     }
 
     public void visit(Cube cube) {
 
-        this.representation = "{\n\t\t\"type\": \"cube\",\n\t\t\"x\": " + cube.getX() + XY + cube.getY() + NT;
+        this.representation = "{\n\t\t\"type\": \"cube\",\n\t\t\"x\": " + cube.getX25() + XY + cube.getY25() + NT;
     }
 
     @Override
@@ -46,16 +46,16 @@ public class JSonVisitor implements Visitor {
 
             switch(shapeType) {
                 case "circle":
-                    sb.append("\n\t\t{\n\t\t\t\"type\": \"circle\",\n\t\t\t\"x\": ").append(shape.getX()).append(XY).append(shape.getY()).append(NT);
+                    sb.append("\n\t\t{\n\t\t\t\"type\": \"circle\",\n\t\t\t\"x\": ").append(shape.getX25()).append(XY).append(shape.getY25()).append(NT);
                     break;
                 case "square":
-                    sb.append("\n\t\t{\n\t\t\t\"type\": \"square\",\n\t\t\t\"x\": ").append(shape.getX()).append(XY).append(shape.getY()).append(NT);
+                    sb.append("\n\t\t{\n\t\t\t\"type\": \"square\",\n\t\t\t\"x\": ").append(shape.getX25()).append(XY).append(shape.getY25()).append(NT);
                     break;
                 case "triangle":
-                    sb.append("\n\t\t{\n\t\t\t\"type\": \"triangle\",\n\t\t\t\"x\": ").append(shape.getX()).append(XY).append(shape.getY()).append(NT);
+                    sb.append("\n\t\t{\n\t\t\t\"type\": \"triangle\",\n\t\t\t\"x\": ").append(shape.getX25()).append(XY).append(shape.getY25()).append(NT);
                     break;
                 case "cube":
-                    sb.append("\n\t\t{\n\t\t\t\"type\": \"cube\",\n\t\t\t\"x\": ").append(shape.getX()).append(XY).append(shape.getY()).append(NT);
+                    sb.append("\n\t\t{\n\t\t\t\"type\": \"cube\",\n\t\t\t\"x\": ").append(shape.getX25()).append(XY).append(shape.getY25()).append(NT);
                     break;
                 default:
                     break;

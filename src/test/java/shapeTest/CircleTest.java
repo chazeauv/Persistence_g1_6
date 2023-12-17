@@ -25,7 +25,7 @@ class CircleTest {
         //when
         circle.accept(xmlVisitor);
         //then
-        assertEquals("<shape><type>circle</type><x>"+circle.getX()+"</x><y>"+circle.getY()+"</y></shape>", xmlVisitor.getRepresentation());
+        assertEquals("<shape><type>circle</type><x>"+circle.getX25()+"</x><y>"+circle.getY25()+"</y></shape>", xmlVisitor.getRepresentation());
     }
 
     @Test
@@ -41,7 +41,7 @@ class CircleTest {
         //when
         circle.accept(jsonVisitor);
         //then
-        assertEquals("{\n\t\t\"type\": \"circle\",\n\t\t\"x\": " + circle.getX() + XY + circle.getY() + NT, jsonVisitor.getRepresentation());
+        assertEquals("{\n\t\t\"type\": \"circle\",\n\t\t\"x\": " + circle.getX25() + XY + circle.getY25() + NT, jsonVisitor.getRepresentation());
     }
 
     @Mock

@@ -92,8 +92,8 @@ class GroupTest {
         List<SimpleShape> shapes = group.getShapes();
         int[][] coords = new int[shapes.size()][2];
         for (SimpleShape shape : shapes) {
-            coords[shapes.indexOf(shape)][0] = shape.getX();
-            coords[shapes.indexOf(shape)][1] = shape.getY();
+            coords[shapes.indexOf(shape)][0] = shape.getX25();
+            coords[shapes.indexOf(shape)][1] = shape.getY25();
         }
 
         String expectedRepresentation = "{\n\t\"group\": [\n\t\t{\n\t\t\t\"type\": \"circle\",\n\t\t\t\"x\": " + coords[0][0] + ",\n\t\t\"y\": " + coords[0][1] + "\n\t}\n\t\t{\n\t\t\t\"type\": \"square\",\n\t\t\t\"x\": " + coords[1][0] + ",\n\t\t\"y\": " + coords[1][1] + "\n\t}\n\t]\n}";
@@ -120,8 +120,8 @@ class GroupTest {
         List<SimpleShape> shapes = group.getShapes();
         int[][] coords = new int[shapes.size()][2];
         for (SimpleShape shape : shapes) {
-            coords[shapes.indexOf(shape)][0] = shape.getX();
-            coords[shapes.indexOf(shape)][1] = shape.getY();
+            coords[shapes.indexOf(shape)][0] = shape.getX25();
+            coords[shapes.indexOf(shape)][1] = shape.getY25();
         }
 
         String expectedRepresentation = "<group><shape><type>circle</type><x>" + coords[0][0] + "</x><y>" + coords[0][1] + "</y></shape><shape><type>square</type><x>" + coords[1][0] + "</x><y>" + coords[1][1] + "</y></shape></group>";

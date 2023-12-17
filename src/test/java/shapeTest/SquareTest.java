@@ -25,7 +25,7 @@ class SquareTest {
         //when
         square.accept(xmlVisitor);
         //then
-        assertEquals("<shape><type>square</type><x>"+square.getX()+"</x><y>"+square.getY()+"</y></shape>", xmlVisitor.getRepresentation());
+        assertEquals("<shape><type>square</type><x>"+square.getX25()+"</x><y>"+square.getY25()+"</y></shape>", xmlVisitor.getRepresentation());
     }
 
     @Test
@@ -41,7 +41,7 @@ class SquareTest {
         //when
         square.accept(jsonVisitor);
         //then
-        assertEquals("{\n\t\t\"type\": \"square\",\n\t\t\"x\": " + square.getX() + XY + square.getY() + NT, jsonVisitor.getRepresentation());
+        assertEquals("{\n\t\t\"type\": \"square\",\n\t\t\"x\": " + square.getX25() + XY + square.getY25() + NT, jsonVisitor.getRepresentation());
     }
 
     @Mock

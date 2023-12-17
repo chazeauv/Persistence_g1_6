@@ -5,6 +5,8 @@ import fr.uga.miage.m1.polygons.gui.persistence.JSonVisitor;
 import fr.uga.miage.m1.polygons.gui.persistence.Visitor;
 import fr.uga.miage.m1.polygons.gui.persistence.XMLVisitor;
 import fr.uga.miage.m1.polygons.gui.shapes.*;
+import importExport.Export;
+import importExport.ImportXML;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -188,171 +190,6 @@ public class JDrawingFrame extends JFrame {
         mToolBar.add(button);
         mToolBar.validate();
         repaint();
-    }
-
-
-    public String importXML() {
-        JFileChooser fileChooser = new JFileChooser();
-        fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
-        int returnValue = fileChooser.showOpenDialog(null);
-        if (returnValue == JFileChooser.APPROVE_OPTION) {
-            File selectedFile = fileChooser.getSelectedFile();
-            try {
-                DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-                dbFactory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
-                DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-                Document doc = dBuilder.parse(selectedFile);
-                doc.getDocumentElement().normalize();
-                return nodeToString(doc.getDocumentElement());
-            } catch (Exception e) {
-                LogRecord warnRec = new LogRecord(Level.WARNING, "Erreur lors de l'import du fichier");
-                LOGGER.log(warnRec);
-                return null;
-            }
-        } else {
-            return null;
-        }
-    }
-
-    private String nodeToString(Node node) {
-        StringBuilder result = new StringBuilder();
-        if (node.getNodeType() == Node.TEXT_NODE) {
-            result.append(node.getNodeValue());
-        } else if (node.getNodeType() != Node.DOCUMENT_NODE) {
-            result.append("<").append(node.getNodeName());
-            if (node.getAttributes() != null && node.getAttributes().getLength() > 0) {
-                for (int i = 0; i < node.getAttributes().getLength(); i++) {
-                    result.append(" ").append(node.getAttributes().item(i).getNodeName())
-                            .append("=").append("\"")
-                            .append(node.getAttributes().item(i).getNodeValue())
-                            .append("\"");
-                }
-            }
-            result.append(">");
-            NodeList nodeList = node.getChildNodes();
-            for (int i = 0; i < nodeList.getLength(); i++) {
-                Node currentNode = nodeList.item(i);
-                result.append(nodeToString(currentNode));
-            }
-            result.append("</").append(node.getNodeName()).append(">");
-        }
-        return result.toString();
-    }
-
-    /**
-     * Exports the shapes into a file (XML or Json).
-     */
-    public void export() {
-        String fileType = getFileType();
-
-        if (fileType.isEmpty()) {
-            handleInvalidFileType();
-            return;
-        }
-
-        StringBuilder export = new StringBuilder();
-        boolean isJSON = fileType.equalsIgnoreCase("json");
-
-        prepareExportHeader(export, isJSON);
-
-        generateShapeRepresentations(export, isJSON, mShapes);
-
-        saveFile(export, fileType);
-
-        showMessageFileSaved();
-    }
-
-    private String getFileType() {
-        return javax.swing.JOptionPane.showInputDialog("Quel type de fichier voulez-vous exporter ? (XML ou JSON)").toLowerCase();
-    }
-
-    private void handleInvalidFileType() {
-        LogRecord warnRec = new LogRecord(Level.WARNING, "Le type de fichier n'est pas valide");
-        LOGGER.log(warnRec);
-    }
-
-    private void prepareExportHeader(StringBuilder export, boolean isJSON) {
-        if (isJSON) {
-            export.append("{\n\"shapes\": [\n");
-        } else {
-            export.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<shapes>");
-        }
-    }
-
-    private void generateShapeRepresentations(StringBuilder export, boolean isJSON, List<SimpleShape> mShps) {
-        List<SimpleShape> shapesAlreadyInVisited = new ArrayList<>();
-
-        //on boucle sur les groupes
-        for (Group group : mGroups) {
-            Visitor visitor = isJSON ? new JSonVisitor() : new XMLVisitor();
-
-            group.accept(visitor);
-
-            export.append(visitor.getRepresentation());
-
-            shapesAlreadyInVisited.addAll(group.getShapes());
-        }
-
-        for (int i = 0; i < mShps.size(); i++) {
-            SimpleShape shp = mShps.get(i);
-            Visitor visitor = isJSON ? new JSonVisitor() : new XMLVisitor();
-
-            visitShapes(shp, visitor, export, isJSON, shapesAlreadyInVisited, i);
-        }
-
-
-        export.append(isJSON ? "\n]\n}" : "\n</shapes>");
-    }
-
-    private void visitShapes(SimpleShape shp, Visitor visitor, StringBuilder export, boolean isJSON, List<SimpleShape> shapesAlreadyInVisited, int i){
-        if(!shapesAlreadyInVisited.contains(shp)) {
-            if (shp instanceof Square) {
-                Square square = (Square) shp;
-                square.accept(visitor);
-            } else if (shp instanceof Triangle) {
-                Triangle triangle = (Triangle) shp;
-                triangle.accept(visitor);
-            } else if (shp instanceof Circle) {
-                Circle circle = (Circle) shp;
-                circle.accept(visitor);
-            } else if (shp instanceof Cube) {
-                Cube cube = (Cube) shp;
-                cube.accept(visitor);
-            } else {
-                LogRecord warnRec = new LogRecord(Level.WARNING, "Shape non reconnue");
-                LOGGER.log(warnRec);
-            }
-            export.append(visitor.getRepresentation());
-
-            if (i < mShapes.size() - 1 && shapesAlreadyInVisited.size() < mShapes.size() - 1) {
-                export.append(isJSON ? ",\n" : "");
-            }
-            shapesAlreadyInVisited.add(shp);
-        }
-    }
-
-    private void saveFile(StringBuilder export, String fileType) {
-        String fileName = javax.swing.JOptionPane.showInputDialog("Quel nom voulez-vous donner au fichier ?");
-        javax.swing.JFileChooser fileChooser = new javax.swing.JFileChooser();
-        fileChooser.setFileSelectionMode(javax.swing.JFileChooser.DIRECTORIES_ONLY);
-        fileChooser.setDialogTitle("Enregistrer le fichier");
-        fileChooser.showSaveDialog(null);
-
-        File selectedFile = fileChooser.getSelectedFile();
-        String filePath = selectedFile.getAbsolutePath();
-        Path path = Paths.get(filePath).resolve(fileName + "." + fileType);
-        File file = path.toFile();
-
-        try (java.io.PrintWriter output = new java.io.PrintWriter(file)) {
-            output.print(export);
-        } catch (Exception e) {
-            LogRecord warnRec = new LogRecord(Level.WARNING, "Erreur lors de l'écriture du fichier");
-            LOGGER.log(warnRec);
-        }
-    }
-
-    private void showMessageFileSaved() {
-        javax.swing.JOptionPane.showMessageDialog(null, "Le fichier a bien ete enregistre");
     }
 
 
@@ -605,16 +442,13 @@ public class JDrawingFrame extends JFrame {
         }
     }
 
-    /**
-     * Simple action listener for export button.
-     */
     private class CustomActionListener implements ActionListener {
         public void actionPerformed(ActionEvent evt) {
 
             JButton btn;
 
             if (evt.getActionCommand().equals(EXPORT)) {
-                export();
+                Export.export(mShapes, mGroups);
                 btn = actionButtons.get(EXPORT);
                 btn.setBackground(new Color(194, 231, 255));
             } else if (evt.getActionCommand().equals(GROUP)) {
@@ -624,7 +458,7 @@ public class JDrawingFrame extends JFrame {
             } else if(evt.getActionCommand().equals(IMPORT)) {
                 btn = actionButtons.get(IMPORT);
                 btn.setBackground(new Color(194, 231, 255));
-                parseShapes(importXML());
+                ImportXML.parseShapes(ImportXML.importXML(), mShapes, JDrawingFrame.this);
             } else{
                 btn = actionButtons.get(EXPORT);
                 btn.setBackground(Color.WHITE);
@@ -635,7 +469,7 @@ public class JDrawingFrame extends JFrame {
             }
         }
 
-        private void parseShapes(String xmlString) {
+        /*private void parseShapes(String xmlString) {
             List<List<SimpleShape>> groupes = new ArrayList<>();
             try {
                 Document doc = parseXmlString(xmlString);
@@ -678,7 +512,7 @@ public class JDrawingFrame extends JFrame {
                 for (int j = 0; j < shapeNodes.getLength(); j++) {
                     Node shapeNode = shapeNodes.item(j);
                     shape = parseShapeNode(shapeNode);
-                    if(shape != null) existingShape = shapeAlreadyExists(shape);
+                    if(shape != null) existingShape = shapeAlreadyExists(shape, mShapes);
                     if (existingShape != null) {
                         shapes.add(existingShape);
                     }
@@ -713,15 +547,15 @@ public class JDrawingFrame extends JFrame {
             }
         }
 
-        private SimpleShape shapeAlreadyExists(SimpleShape shape) {
-            for (SimpleShape s : mShapes) {
+        private SimpleShape shapeAlreadyExists(SimpleShape shape, List<SimpleShape> mShps) {
+            for (SimpleShape s : mShps) {
                 //compare les coordonnées et le type des shapes
                 if (s.getX() == shape.getX() && s.getY() == shape.getY() && shape.getClass().isAssignableFrom(s.getClass())) {
                     return s;
                 }
             }
             return null;
-        }
+        }*/
     }
 
     private class GroupsButtonsListener implements ActionListener {
@@ -742,7 +576,6 @@ public class JDrawingFrame extends JFrame {
                     }
                 }
             }
-
 
         }
     }
