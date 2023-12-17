@@ -23,7 +23,7 @@ class CubeTest {
         //when
         cube.accept(xmlVisitor);
         //then
-        assertEquals("<shape><type>cube</type><x>"+cube.getX()+"</x><y>"+cube.getY()+"</y></shape>", xmlVisitor.getRepresentation());
+        assertEquals("<shape><type>cube</type><x>"+cube.getX25()+"</x><y>"+cube.getY25()+"</y></shape>", xmlVisitor.getRepresentation());
     }
 
     @Test
@@ -39,7 +39,7 @@ class CubeTest {
         //when
         cube.accept(jsonVisitor);
         //then
-        assertEquals("{\n\t\t\"type\": \"cube\",\n\t\t\"x\": " + cube.getX() + XY + cube.getY() + NT, jsonVisitor.getRepresentation());
+        assertEquals("{\n\t\t\"type\": \"cube\",\n\t\t\"x\": " + cube.getX25() + XY + cube.getY25() + NT, jsonVisitor.getRepresentation());
     }
 
     @Test
