@@ -4,8 +4,8 @@ import fr.uga.miage.m1.polygons.gui.command.Command;
 import fr.uga.miage.m1.polygons.gui.shapes.Cube;
 import fr.uga.miage.m1.polygons.gui.shapes.Group;
 import fr.uga.miage.m1.polygons.gui.shapes.SimpleShape;
-import importExport.Export;
-import importExport.ImportXML;
+import fr.uga.miage.m1.polygons.gui.importexport.Export;
+import fr.uga.miage.m1.polygons.gui.importexport.ImportXML;
 
 import javax.swing.*;
 import javax.swing.border.MatteBorder;
@@ -14,7 +14,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
 import java.util.*;
-import java.util.logging.Logger;
 
 /**
  * This class represents the main application class, which is a JFrame subclass

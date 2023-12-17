@@ -1,6 +1,6 @@
-package importExport;
+package fr.uga.miage.m1.polygons.gui.importexport;
 
-import fr.uga.miage.m1.polygons.gui.JDrawingFrame;
+
 import fr.uga.miage.m1.polygons.gui.persistence.JSonVisitor;
 import fr.uga.miage.m1.polygons.gui.persistence.Visitor;
 import fr.uga.miage.m1.polygons.gui.persistence.XMLVisitor;
