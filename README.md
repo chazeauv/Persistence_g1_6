@@ -6,7 +6,7 @@
     - [Principe](#Principe)
     - [Regles](#Regles)
     - [Fonctionnement](#Fonctionnement)
-  - [Installation de la fonctionnalité d'importation](#Installation-de-la-fonctionnalite-d'importation)
+  - [Installation de la fonctionnalite d'importation](#Installation-de-la-fonctionnalite-d'importation)
 - [Conception et réalisation](#Conception-et-realisation)
 - [Documentation](#documentation)
 - [Test](#test)
