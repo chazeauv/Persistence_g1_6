@@ -18,6 +18,10 @@ public interface SimpleShape {
 
     int getY();
 
+    int getX25();
+
+    int getY25();
+
     void setX(int x);
 
     void setY(int y);

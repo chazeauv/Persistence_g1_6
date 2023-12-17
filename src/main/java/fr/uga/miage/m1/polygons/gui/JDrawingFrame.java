@@ -20,6 +20,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.StringReader;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.*;
 import java.util.logging.Level;
@@ -93,7 +95,8 @@ public class JDrawingFrame extends JFrame {
 
     /**
      * Default constructor that populates the main window.
-     * @param frameName
+     * @param frameName name of the frame
+     * @param cli the client
      */
     public JDrawingFrame(String frameName, Client cli) {
 
@@ -188,7 +191,7 @@ public class JDrawingFrame extends JFrame {
     }
 
 
-    public String importAndParse() {
+    public String importXML() {
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
         int returnValue = fileChooser.showOpenDialog(null);
@@ -236,94 +239,6 @@ public class JDrawingFrame extends JFrame {
         return result.toString();
     }
 
-    private void parseShapes(String xmlString) {
-        List<List<SimpleShape>> groupes = new ArrayList<>();
-        try {
-            Document doc = parseXmlString(xmlString);
-
-            assert doc != null;
-            NodeList shapeNodes = doc.getElementsByTagName("shape");
-            for (int i = 0; i < shapeNodes.getLength(); i++) {
-                Node shapeNode = shapeNodes.item(i);
-                shape = parseShapeNode(shapeNode);
-                if(shape != null) instantiateShape(shape);
-            }
-
-            NodeList groupNodes = doc.getElementsByTagName("group");
-            for (int i = 0; i < groupNodes.getLength(); i++) {
-                Node groupNode = groupNodes.item(i);
-                List<SimpleShape> shapes = parseGroupNode(groupNode);
-                groupes.add(shapes);
-            }
-
-            for (List<SimpleShape> groupe : groupes) {
-                Group g = new Group();
-                for (SimpleShape shp : groupe) {
-                    g.addShape(shp);
-                }
-                instantiateGroup(g);
-            }
-
-        } catch (Exception e) {
-            LogRecord warnRec = new LogRecord(Level.WARNING, "Erreur lors du parsing du fichier");
-            LOGGER.log(warnRec);
-        }
-    }
-
-    private Document parseXmlString(String xmlString) {
-        try{
-            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-            dbFactory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
-            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-            Document doc = dBuilder.parse(new InputSource(new StringReader(xmlString)));
-            doc.getDocumentElement().normalize();
-            return doc;
-        } catch (Exception e) {
-            LogRecord warnRec = new LogRecord(Level.WARNING, "Erreur lors du parsing du fichier");
-            LOGGER.log(warnRec);
-            return null;
-        }
-    }
-
-    private SimpleShape parseShapeNode(Node shapeNode) {
-        if (shapeNode.getNodeType() == Node.ELEMENT_NODE) {
-            Element shapeElement = (Element) shapeNode;
-            String type = shapeElement.getElementsByTagName("type").item(0).getTextContent();
-            int x = Integer.parseInt(shapeElement.getElementsByTagName("x").item(0).getTextContent());
-            int y = Integer.parseInt(shapeElement.getElementsByTagName("y").item(0).getTextContent());
-            return ShapeFactory.createShapeFromStr(type, x, y);
-        }
-        return null;
-    }
-
-    private List<SimpleShape> parseGroupNode(Node groupNode) {
-        List<SimpleShape> shapes = new ArrayList<>();
-        SimpleShape existingShape = null;
-        if (groupNode.getNodeType() == Node.ELEMENT_NODE) {
-            Element groupElement = (Element) groupNode;
-            NodeList shapeNodes = groupElement.getElementsByTagName("shape");
-            for (int j = 0; j < shapeNodes.getLength(); j++) {
-                Node shapeNode = shapeNodes.item(j);
-                shape = parseShapeNode(shapeNode);
-                if(shape != null) existingShape = shapeAlreadyExists(shape);
-                if (existingShape != null) {
-                    shapes.add(existingShape);
-                }
-            }
-        }
-        return shapes;
-    }
-
-    private SimpleShape shapeAlreadyExists(SimpleShape shape) {
-        for (SimpleShape s : mShapes) {
-            //compare les coordonnées et le type des shapes
-            if (s.getX() == shape.getX() && s.getY() == shape.getY() && shape.getClass().isAssignableFrom(s.getClass())) {
-                return s;
-            }
-        }
-        return null;
-    }
-
     /**
      * Exports the shapes into a file (XML or Json).
      */
@@ -340,7 +255,7 @@ public class JDrawingFrame extends JFrame {
 
         prepareExportHeader(export, isJSON);
 
-        generateShapeRepresentations(export, isJSON);
+        generateShapeRepresentations(export, isJSON, mShapes);
 
         saveFile(export, fileType);
 
@@ -364,7 +279,7 @@ public class JDrawingFrame extends JFrame {
         }
     }
 
-    private void generateShapeRepresentations(StringBuilder export, boolean isJSON) {
+    private void generateShapeRepresentations(StringBuilder export, boolean isJSON, List<SimpleShape> mShps) {
         List<SimpleShape> shapesAlreadyInVisited = new ArrayList<>();
 
         //on boucle sur les groupes
@@ -378,39 +293,42 @@ public class JDrawingFrame extends JFrame {
             shapesAlreadyInVisited.addAll(group.getShapes());
         }
 
-        for (int i = 0; i < mShapes.size(); i++) {
-            SimpleShape shp = mShapes.get(i);
+        for (int i = 0; i < mShps.size(); i++) {
+            SimpleShape shp = mShps.get(i);
             Visitor visitor = isJSON ? new JSonVisitor() : new XMLVisitor();
 
-            if(!shapesAlreadyInVisited.contains(shp)) {
-                if (shp instanceof Square) {
-                    Square square = (Square) shp;
-                    square.accept(visitor);
-                } else if (shp instanceof Triangle) {
-                    Triangle triangle = (Triangle) shp;
-                    triangle.accept(visitor);
-                } else if (shp instanceof Circle) {
-                    Circle circle = (Circle) shp;
-                    circle.accept(visitor);
-                } else if (shp instanceof Cube) {
-                    Cube cube = (Cube) shp;
-                    cube.accept(visitor);
-                } else {
-                    LogRecord warnRec = new LogRecord(Level.WARNING, "Shape not found");
-                    LOGGER.log(warnRec);
-                    continue;
-                }
-                export.append(visitor.getRepresentation());
-
-                if (i < mShapes.size() - 1 && shapesAlreadyInVisited.size() < mShapes.size() - 1) {
-                    export.append(isJSON ? ",\n" : "");
-                }
-                shapesAlreadyInVisited.add(shp);
-            }
+            visitShapes(shp, visitor, export, isJSON, shapesAlreadyInVisited, i);
         }
 
 
         export.append(isJSON ? "\n]\n}" : "\n</shapes>");
+    }
+
+    private void visitShapes(SimpleShape shp, Visitor visitor, StringBuilder export, boolean isJSON, List<SimpleShape> shapesAlreadyInVisited, int i){
+        if(!shapesAlreadyInVisited.contains(shp)) {
+            if (shp instanceof Square) {
+                Square square = (Square) shp;
+                square.accept(visitor);
+            } else if (shp instanceof Triangle) {
+                Triangle triangle = (Triangle) shp;
+                triangle.accept(visitor);
+            } else if (shp instanceof Circle) {
+                Circle circle = (Circle) shp;
+                circle.accept(visitor);
+            } else if (shp instanceof Cube) {
+                Cube cube = (Cube) shp;
+                cube.accept(visitor);
+            } else {
+                LogRecord warnRec = new LogRecord(Level.WARNING, "Shape non reconnue");
+                LOGGER.log(warnRec);
+            }
+            export.append(visitor.getRepresentation());
+
+            if (i < mShapes.size() - 1 && shapesAlreadyInVisited.size() < mShapes.size() - 1) {
+                export.append(isJSON ? ",\n" : "");
+            }
+            shapesAlreadyInVisited.add(shp);
+        }
     }
 
     private void saveFile(StringBuilder export, String fileType) {
@@ -422,7 +340,8 @@ public class JDrawingFrame extends JFrame {
 
         File selectedFile = fileChooser.getSelectedFile();
         String filePath = selectedFile.getAbsolutePath();
-        File file = new File(filePath + "/" + fileName + "." + fileType);
+        Path path = Paths.get(filePath).resolve(fileName + "." + fileType);
+        File file = path.toFile();
 
         try (java.io.PrintWriter output = new java.io.PrintWriter(file)) {
             output.print(export);
@@ -433,7 +352,7 @@ public class JDrawingFrame extends JFrame {
     }
 
     private void showMessageFileSaved() {
-        javax.swing.JOptionPane.showMessageDialog(null, "Le fichier a bien été enregistré");
+        javax.swing.JOptionPane.showMessageDialog(null, "Le fichier a bien ete enregistre");
     }
 
 
@@ -520,25 +439,7 @@ public class JDrawingFrame extends JFrame {
 
             cleanGroup(group);
 
-            if(group.getShapes().isEmpty()){
-                return false;
-            }
-
-            mGroups.add(group);
-
-            int mGroupsSize = mGroups.size();
-
-            JButton button = new JButton("Group" + mGroupsSize);
-            if(mGroupsSize % 2 == 0)
-                button.setBackground(new Color(245, 249, 253));
-            else
-                button.setBackground(Color.WHITE);
-            button.setBorder(new MatteBorder(0, 0, 0, 0, Color.BLACK));
-            button.setPreferredSize(new Dimension(100, 20));
-            button.addActionListener(mGroupsButtonsListener);
-            mGroupsMenu.add(button);
-
-            return true;
+            return instantiateGroup(group);
     }
 
     public boolean instantiateGroup(Group group){
@@ -625,23 +526,18 @@ public class JDrawingFrame extends JFrame {
         return false;
     }
 
-    public boolean moveGroup(Group group, SimpleShape shape, int x, int y) {
+    public void moveGroup(Group group, SimpleShape shape, int x, int y) {
 
         int decalageX =  shape.getX() - x;
         int decalageY = shape.getY() - y ;
 
-        boolean res = false;
-
         for (SimpleShape shp : group.getShapes()) {
             if(!shp.equals(shape)){
                 moveShape(shp, shp.getX() - decalageX, shp.getY() - decalageY);
-                res = true;
             }
         }
 
         moveShape(shape, x, y);
-
-        return res;
 
     }
 
@@ -728,7 +624,7 @@ public class JDrawingFrame extends JFrame {
             } else if(evt.getActionCommand().equals(IMPORT)) {
                 btn = actionButtons.get(IMPORT);
                 btn.setBackground(new Color(194, 231, 255));
-                parseShapes(importAndParse());
+                parseShapes(importXML());
             } else{
                 btn = actionButtons.get(EXPORT);
                 btn.setBackground(Color.WHITE);
@@ -737,6 +633,94 @@ public class JDrawingFrame extends JFrame {
                 btn = actionButtons.get(IMPORT);
                 btn.setBackground(Color.WHITE);
             }
+        }
+
+        private void parseShapes(String xmlString) {
+            List<List<SimpleShape>> groupes = new ArrayList<>();
+            try {
+                Document doc = parseXmlString(xmlString);
+
+                assert doc != null;
+                NodeList shapeNodes = doc.getElementsByTagName("shape");
+                for (int i = 0; i < shapeNodes.getLength(); i++) {
+                    Node shapeNode = shapeNodes.item(i);
+                    shape = parseShapeNode(shapeNode);
+                    if(shape != null) instantiateShape(shape);
+                }
+
+                NodeList groupNodes = doc.getElementsByTagName("group");
+                for (int i = 0; i < groupNodes.getLength(); i++) {
+                    Node groupNode = groupNodes.item(i);
+                    List<SimpleShape> shapes = parseGroupNode(groupNode);
+                    groupes.add(shapes);
+                }
+
+                for (List<SimpleShape> groupe : groupes) {
+                    Group g = new Group();
+                    for (SimpleShape shp : groupe) {
+                        g.addShape(shp);
+                    }
+                    instantiateGroup(g);
+                }
+
+            } catch (Exception e) {
+                LogRecord warnRec = new LogRecord(Level.WARNING, "Erreur lors du parsing du fichier");
+                LOGGER.log(warnRec);
+            }
+        }
+
+        private List<SimpleShape> parseGroupNode(Node groupNode) {
+            List<SimpleShape> shapes = new ArrayList<>();
+            SimpleShape existingShape = null;
+            if (groupNode.getNodeType() == Node.ELEMENT_NODE) {
+                Element groupElement = (Element) groupNode;
+                NodeList shapeNodes = groupElement.getElementsByTagName("shape");
+                for (int j = 0; j < shapeNodes.getLength(); j++) {
+                    Node shapeNode = shapeNodes.item(j);
+                    shape = parseShapeNode(shapeNode);
+                    if(shape != null) existingShape = shapeAlreadyExists(shape);
+                    if (existingShape != null) {
+                        shapes.add(existingShape);
+                    }
+                }
+            }
+            return shapes;
+        }
+
+        private SimpleShape parseShapeNode(Node shapeNode) {
+            if (shapeNode.getNodeType() == Node.ELEMENT_NODE) {
+                Element shapeElement = (Element) shapeNode;
+                String type = shapeElement.getElementsByTagName("type").item(0).getTextContent();
+                int x = Integer.parseInt(shapeElement.getElementsByTagName("x").item(0).getTextContent());
+                int y = Integer.parseInt(shapeElement.getElementsByTagName("y").item(0).getTextContent());
+                return ShapeFactory.createShapeFromStr(type, x, y);
+            }
+            return null;
+        }
+
+        private Document parseXmlString(String xmlString) {
+            try{
+                DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+                dbFactory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+                DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+                Document doc = dBuilder.parse(new InputSource(new StringReader(xmlString)));
+                doc.getDocumentElement().normalize();
+                return doc;
+            } catch (Exception e) {
+                LogRecord warnRec = new LogRecord(Level.WARNING, "Erreur lors du parsing du fichier");
+                LOGGER.log(warnRec);
+                return null;
+            }
+        }
+
+        private SimpleShape shapeAlreadyExists(SimpleShape shape) {
+            for (SimpleShape s : mShapes) {
+                //compare les coordonnées et le type des shapes
+                if (s.getX() == shape.getX() && s.getY() == shape.getY() && shape.getClass().isAssignableFrom(s.getClass())) {
+                    return s;
+                }
+            }
+            return null;
         }
     }
 

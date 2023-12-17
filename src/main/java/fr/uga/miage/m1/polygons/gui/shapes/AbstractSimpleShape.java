@@ -13,6 +13,14 @@ public abstract class AbstractSimpleShape implements SimpleShape {
         return mY;
     }
 
+    public int getX25() {
+        return mX + 25;
+    }
+
+    public int getY25() {
+        return mY + 25;
+    }
+
     public void setX(int mX) {
         this.mX=mX;
     }
